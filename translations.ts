@@ -97,4 +97,15 @@ export const translations: Translation = {
   serviceSupport: { ar: 'تبرع لمشروع', en: 'Donate' },
   serviceMushaf: { ar: 'المصحف الرقمي', en: 'Digital Mushaf' },
   serviceKhutbah: { ar: 'منصة الخطباء', en: 'Khutbah Platform' },
+  // Prayer Times
+  prayerTimes: { ar: 'مواقيت الصلاة', en: 'Prayer Times' },
+  fajr: { ar: 'الفجر', en: 'Fajr' },
+  sunrise: { ar: 'الشروق', en: 'Sunrise' },
+  dhuhr: { ar: 'الظهر', en: 'Dhuhr' },
+  asr: { ar: 'العصر', en: 'Asr' },
+  maghrib: { ar: 'المغرب', en: 'Maghrib' },
+  isha: { ar: 'العشاء', en: 'Isha' },
+  khartoumTime: { ar: 'بتوقيت الخرطوم', en: 'Khartoum Time' },
+  nextPrayer: { ar: 'الصلاة القادمة', en: 'Next Prayer' },
+  hijriDate: { ar: 'التاريخ الهجري', en: 'Hijri Date' },
 };

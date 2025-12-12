@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Users, BookOpen, UserCheck, ArrowRight, ArrowLeft, Heart, Mic2, FileText, Calendar, CheckCircle, MapPin, Star, GraduationCap, ChevronRight, PlayCircle, MessageCircle, HelpCircle, Sparkles, Quote, Video, PenTool, ShieldAlert, Laptop, Search, Coins } from 'lucide-react';
+import { Users, BookOpen, UserCheck, ArrowRight, ArrowLeft, Heart, Mic2, FileText, Calendar, CheckCircle, MapPin, Star, GraduationCap, ChevronRight, PlayCircle, MessageCircle, HelpCircle, Sparkles, Quote, Video, PenTool, ShieldAlert, Laptop, Search, Coins, Clock, Sun, Moon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
@@ -54,6 +54,15 @@ const Home: React.FC = () => {
       { q: language === 'ar' ? 'حكم الصلاة في الطائرة جالساً؟' : 'Ruling on praying sitting in a plane?', a: language === 'ar' ? 'إذا لم تستطع القيام فصل جالساً...' : 'If you cannot stand, pray sitting...' },
       { q: language === 'ar' ? 'زكاة الفطر نقداً؟' : 'Zakat al-Fitr in cash?', a: language === 'ar' ? 'يجوز عند الحاجة ومصلحة الفقير...' : 'Permissible if it serves the poor\'s interest...' },
       { q: language === 'ar' ? 'الجمع بين الصلاتين للمطر؟' : 'Combining prayers for rain?', a: language === 'ar' ? 'يجوز إذا كان المطر يبل الثياب...' : 'Permissible if rain soaks clothes...' },
+  ];
+
+  const prayers = [
+    { name: 'fajr', time: '04:45 AM', icon: Moon },
+    { name: 'sunrise', time: '06:05 AM', icon: Sun },
+    { name: 'dhuhr', time: '12:15 PM', icon: Sun },
+    { name: 'asr', time: '03:45 PM', icon: Sun },
+    { name: 'maghrib', time: '06:25 PM', icon: Moon },
+    { name: 'isha', time: '07:55 PM', icon: Moon },
   ];
 
   return (
@@ -119,7 +128,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* 2. STATS STRIP (Overlapping Hero) */}
-      <div className="relative z-20 -mt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-20 animate-on-scroll delay-300">
+      <div className="relative z-20 -mt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-10 animate-on-scroll delay-300">
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700 p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-gray-200 dark:divide-gray-700">
                   {stats.map((stat, idx) => (
@@ -137,8 +146,57 @@ const Home: React.FC = () => {
           </div>
       </div>
 
-      {/* 3. E-SERVICES SECTION (New: Aggregates all internal functional pages) */}
-      <section className="py-16 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+      {/* 3. PRAYER TIMES WIDGET */}
+      <section className="mb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-on-scroll">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+              <div className="bg-islamic-primary/5 dark:bg-islamic-primary/10 p-4 border-b border-islamic-primary/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="flex items-center gap-3">
+                      <div className="p-2 bg-islamic-primary text-white rounded-lg">
+                          <Clock className="w-6 h-6" />
+                      </div>
+                      <div>
+                          <h3 className="text-lg font-bold text-gray-900 dark:text-white font-serif">{t('prayerTimes')}</h3>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                              <MapPin className="w-3 h-3" /> {t('khartoumTime')}
+                          </p>
+                      </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                      <div className="text-center md:text-start">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('hijriDate')}</p>
+                          <p className="text-sm font-bold text-islamic-primary dark:text-islamic-gold font-serif">
+                              15 {language === 'ar' ? 'رمضان' : 'Ramadan'} 1445
+                          </p>
+                      </div>
+                      <div className="text-center md:text-start border-s border-gray-300 dark:border-gray-600 ps-4">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('nextPrayer')}</p>
+                          <p className="text-sm font-bold text-islamic-primary dark:text-islamic-gold font-serif">
+                              {language === 'ar' ? 'العصر' : 'Asr'} - 03:45 PM
+                          </p>
+                      </div>
+                  </div>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-6 divide-x divide-y md:divide-y-0 divide-gray-100 dark:divide-gray-700 rtl:divide-x-reverse">
+                  {prayers.map((prayer, idx) => (
+                      <div key={idx} className={`p-4 text-center group transition hover:bg-gray-50 dark:hover:bg-gray-700/50 ${idx === 3 ? 'bg-islamic-primary/5 dark:bg-islamic-primary/20' : ''}`}>
+                          <div className={`mx-auto w-8 h-8 rounded-full flex items-center justify-center mb-2 ${idx === 3 ? 'text-islamic-primary dark:text-islamic-gold' : 'text-gray-400'}`}>
+                              <prayer.icon className="w-5 h-5" />
+                          </div>
+                          <p className={`text-sm font-bold font-serif mb-1 ${idx === 3 ? 'text-islamic-primary dark:text-islamic-gold' : 'text-gray-700 dark:text-gray-300'}`}>
+                              {t(prayer.name)}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 font-mono" dir="ltr">
+                              {prayer.time}
+                          </p>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </section>
+
+      {/* 4. E-SERVICES SECTION */}
+      <section className="py-16 bg-white dark:bg-gray-800 border-y border-gray-100 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col md:flex-row justify-between items-center mb-10 animate-on-scroll">
                   <div>
@@ -172,7 +230,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 4. ABOUT SECTION */}
+      {/* 5. ABOUT SECTION */}
       <section className="py-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col lg:flex-row items-center gap-16">
@@ -226,7 +284,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 5. QURAN SPOTLIGHT */}
+      {/* 6. QURAN SPOTLIGHT */}
       <section className="relative py-24 bg-fixed bg-center bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1597956966604-802c290352bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')" }}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center animate-on-scroll">
@@ -255,7 +313,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 6. MAIN SECTORS (SERVICES) */}
+      {/* 7. MAIN SECTORS (SERVICES) */}
       <section className="py-24 bg-gray-50 dark:bg-gray-900">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 animate-on-scroll">
@@ -293,7 +351,7 @@ const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* 7. FEATURED IMAMS */}
+      {/* 8. FEATURED IMAMS */}
       <section className="py-20 bg-white dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-end mb-12 animate-on-scroll">
@@ -329,7 +387,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 8. CALLERS TOOLKIT (From Callers Page) */}
+      {/* 9. CALLERS TOOLKIT (From Callers Page) */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16 animate-on-scroll">
@@ -381,7 +439,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 9. MOSQUES/KHALWAS BANNER */}
+      {/* 10. MOSQUES/KHALWAS BANNER */}
       <section className="relative py-28 bg-fixed bg-center bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')" }}>
           <div className="absolute inset-0 bg-islamic-dark/80"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center animate-on-scroll">
@@ -404,7 +462,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 10. FEATURED COURSES (From Education Page) */}
+      {/* 11. FEATURED COURSES (From Education Page) */}
       <section className="py-20 bg-gray-50 dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-end mb-12 animate-on-scroll">
@@ -454,7 +512,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 11. FATWA CORNER */}
+      {/* 12. FATWA CORNER */}
       <section className="py-20 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -511,7 +569,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 12. LATEST NEWS */}
+      {/* 13. LATEST NEWS */}
       <section className="py-20 bg-gray-50 dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12 animate-on-scroll">
@@ -550,7 +608,7 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 13. SUPPORT CTA */}
+      {/* 14. SUPPORT CTA */}
       <section className="py-24 bg-islamic-light dark:bg-gray-900 transition-colors duration-300 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-islamic-primary/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-islamic-gold/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
