@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Heart, BookOpen, Home, Mic2, ArrowRight, CheckCircle, Copy } from 'lucide-react';
+import { Heart, BookOpen, Home, Mic2, ArrowRight, CheckCircle, Copy, Building } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 
 const Support: React.FC = () => {
@@ -9,34 +9,34 @@ const Support: React.FC = () => {
 
   const portfolios = [
     {
-      id: 'quran',
-      title: language === 'ar' ? 'محفظة دعم مشاريع التحفيظ' : 'Quran Projects Portfolio',
+      id: 'khalwa',
+      title: language === 'ar' ? 'تنمية مشاريع الخلاوي والتحفيظ' : 'Khalwas & Memorization Development',
       description: language === 'ar' 
-        ? 'دعم حلقات التحفيظ، كفالة الحفظة، وطباعة ونشر المصحف الشريف.' 
-        : 'Supporting memorization circles, sponsoring Huffaz, and printing the Holy Quran.',
+        ? 'دعم مالي مباشر للرواتب والأغذية، توفير مواد تعليمية، وتدريب المعلمين.' 
+        : 'Direct financial support for salaries and food, providing educational materials, and teacher training.',
       icon: BookOpen,
       color: 'bg-green-50 text-green-600',
       account: '1234-5678-9012-001',
       bank: language === 'ar' ? 'بنك الخرطوم' : 'Bank of Khartoum'
     },
     {
-      id: 'construction',
-      title: language === 'ar' ? 'محفظة إنشاء الخلاوي والمساجد' : 'Mosques & Khalwas Construction',
+      id: 'housing',
+      title: language === 'ar' ? 'برنامج "سكن كريم"' : '"Decent Housing" Program',
       description: language === 'ar' 
-        ? 'المساهمة في بناء وترميم بيوت الله ومجمعات الخلاوي القرآنية في السودان.' 
-        : 'Contribute to building and renovating Mosques and Quranic Khalwas complexes in Sudan.',
+        ? 'توفير مساكن مناسبة للأئمة والمؤذنين، وتحسين البيئة المعيشية للعاملين في المساجد.' 
+        : 'Providing suitable housing for Imams and Muezzins, and improving living environment.',
       icon: Home,
       color: 'bg-blue-50 text-blue-600',
       account: '1234-5678-9012-002',
       bank: language === 'ar' ? 'بنك أمدرمان الوطني' : 'Omdurman National Bank'
     },
     {
-      id: 'dawah',
-      title: language === 'ar' ? 'محفظة الدعوة وتأهيل الأئمة' : 'Da\'wah & Imams Training',
+      id: 'care',
+      title: language === 'ar' ? 'صندوق رعاية الأئمة والحفظة' : 'Imams & Huffaz Care Fund',
       description: language === 'ar' 
-        ? 'دعم برامج تأهيل الأئمة والدعاة، والقوافل الدعوية للمناطق النائية.' 
-        : 'Supporting training programs for Imams and Da\'is, and Da\'wah caravans to remote areas.',
-      icon: Mic2,
+        ? 'الرعاية الصحية الشاملة، التأمين الاجتماعي، وبرامج الدعم المالي للمشاريع الصغيرة.' 
+        : 'Comprehensive healthcare, social insurance, and financial support for small projects.',
+      icon: Heart,
       color: 'bg-purple-50 text-purple-600',
       account: '1234-5678-9012-003',
       bank: language === 'ar' ? 'بنك فيصل الإسلامي' : 'Faisal Islamic Bank'
@@ -59,8 +59,8 @@ const Support: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6 font-serif">{t('supportProjects')}</h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
             {language === 'ar' 
-             ? 'منصة تفاعلية للمساهمة العينية والمادية لدعم مشاريع الهيئة في خدمة كتاب الله والمساجد والدعوة في السودان.'
-             : 'Interactive platform for in-kind and financial contributions to support Authority projects serving the Book of Allah, Mosques, and Da\'wah in Sudan.'}
+             ? 'مساهمتك تدعم الاستقرار المعيشي والاجتماعي لحماة المنابر وحفظة كتاب الله في السودان، وتمكنهم من أداء رسالتهم السامية.'
+             : 'Your contribution supports the living and social stability of pulpits guardians and Quran memorizers in Sudan.'}
           </p>
         </div>
 
@@ -105,15 +105,15 @@ const Support: React.FC = () => {
                  </svg>
              </div>
              <div className="relative z-10">
-                 <h3 className="text-2xl font-bold mb-4 font-serif">{language === 'ar' ? 'ساهم عينياً' : 'Contribute In-Kind'}</h3>
+                 <h3 className="text-2xl font-bold mb-4 font-serif">{language === 'ar' ? 'رعاية مراكز النساء' : 'Women\'s Centers Care'}</h3>
                  <p className="max-w-2xl mx-auto text-gray-300 mb-8">
                     {language === 'ar' 
-                     ? 'نستقبل المساهمات العينية (مواد بناء، مصاحف، أجهزة صوتية، فرش مساجد). تواصل معنا لتنسيق الاستلام.'
-                     : 'We accept in-kind contributions (building materials, Qurans, sound systems, carpets). Contact us to coordinate pickup.'}
+                     ? 'مشروع خاص لدعم دور تحفيظ القرآن الكريم للنساء، وتوفير المستلزمات وبرامج التدريب الخاصة بهن.'
+                     : 'A special project to support Quran memorization centers for women, providing supplies and training programs.'}
                  </p>
                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button className="bg-islamic-gold text-white px-8 py-3 rounded-full font-bold hover:bg-yellow-600 transition shadow-lg">
-                        {language === 'ar' ? 'تواصل للتبرع العيني' : 'Contact for In-Kind'}
+                        {language === 'ar' ? 'دعم مراكز النساء' : 'Support Women Centers'}
                     </button>
                  </div>
              </div>

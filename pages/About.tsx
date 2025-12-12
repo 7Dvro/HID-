@@ -1,15 +1,44 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Target, Eye, Heart, Award, Users, Book, Building, CheckCircle } from 'lucide-react';
+import { Target, Eye, Heart, Award, Users, Book, Building, CheckCircle, Scale, Sun, Globe } from 'lucide-react';
 
 const About: React.FC = () => {
   const { t, language } = useLanguage();
 
   const values = [
-    { icon: Heart, titleAr: 'الإخلاص', titleEn: 'Sincerity', descAr: 'ابتغاء وجه الله في كل عمل.', descEn: 'Seeking Allah\'s pleasure in every action.' },
-    { icon: Award, titleAr: 'الإتقان', titleEn: 'Excellence', descAr: 'الجودة العالية في الأداء والمخرجات.', descEn: 'High quality in performance and outputs.' },
-    { icon: Users, titleAr: 'التعاون', titleEn: 'Cooperation', descAr: 'العمل بروح الفريق الواحد.', descEn: 'Working as one team.' },
-    { icon: Book, titleAr: 'الوسطية', titleEn: 'Moderation', descAr: 'التمسك بالمنهج الوسطي المعتدل.', descEn: 'Adhering to the moderate approach.' },
+    { icon: Scale, titleAr: 'الوسطية والاعتدال', titleEn: 'Moderation & Balance', descAr: 'نبذ التطرف والغلو بكافة أشكالهما.', descEn: 'Rejecting extremism and excess in all forms.' },
+    { icon: Sun, titleAr: 'الاستنارة', titleEn: 'Enlightenment', descAr: 'مواكبة العصر وفهم مستجداته.', descEn: 'Keeping up with the times and understanding developments.' },
+    { icon: Award, titleAr: 'الاحترافية', titleEn: 'Professionalism', descAr: 'العمل بمعايير الجودة والكفاءة.', descEn: 'Working with quality and efficiency standards.' },
+    { icon: Scale, titleAr: 'العدالة والشفافية', titleEn: 'Justice & Transparency', descAr: 'المساواة وعدم المحاباة في جميع المعاملات.', descEn: 'Equality and impartiality in all dealings.' },
+    { icon: Globe, titleAr: 'الوحدة الوطنية', titleEn: 'National Unity', descAr: 'تعزيز أواصر الأخوة والتعايش.', descEn: 'Strengthening bonds of brotherhood and coexistence.' },
+    { icon: CheckCircle, titleAr: 'الإيجابية والتأثير', titleEn: 'Positivity & Impact', descAr: 'المساهمة الفاعلة في حل مشكلات المجتمع.', descEn: 'Active contribution to solving societal problems.' },
+  ];
+
+  const axes = [
+      {
+          titleAr: 'التطوير المؤسسي والقيادة',
+          titleEn: 'Institutional Development & Leadership',
+          descAr: 'تطوير الهيكل التنظيمي، تعزيز القدرات الإدارية، تحقيق الاستدامة المالية، وبناء نظام اتصال فعال.',
+          descEn: 'Developing organizational structure, enhancing administrative capabilities, financial sustainability, and effective communication.'
+      },
+      {
+          titleAr: 'التأهيل العلمي والمهني',
+          titleEn: 'Scientific & Professional Qualification',
+          descAr: 'برنامج الترخيص المهني، منصة التعليم الإلكتروني، تطوير المناهج، وإنشاء أكاديمية متخصصة.',
+          descEn: 'Professional licensing program, e-learning platform, curriculum development, and specialized academy.'
+      },
+      {
+          titleAr: 'الدعوة والتأثير المجتمعي',
+          titleEn: 'Da\'wah & Societal Impact',
+          descAr: 'حملات التوعية (سوداننا تسامح وسلام)، تفعيل دور المساجد، تعزيز الحوار، ومحاربة التطرف.',
+          descEn: 'Awareness campaigns, activating mosques role, enhancing dialogue, and fighting extremism.'
+      },
+      {
+          titleAr: 'الرعاية الاجتماعية والاقتصادية',
+          titleEn: 'Social & Economic Care',
+          descAr: 'صندوق رعاية الأئمة، برنامج سكن كريم، الرعاية الصحية، وتحسين المستوى المعيشي.',
+          descEn: 'Imams Care Fund, Decent Housing Program, healthcare, and improving living standards.'
+      }
   ];
 
   return (
@@ -43,10 +72,7 @@ const About: React.FC = () => {
                         {language === 'ar' ? 'من نحن؟' : 'Who We Are?'}
                      </h2>
                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-loose text-justify">
-                         {t('aboutText')} 
-                         {language === 'ar' 
-                          ? ' تأسست الهيئة استجابة للحاجة الماسة لتنظيم وتطوير العمل الدعوي والقرآني في السودان، وتعمل تحت إشراف نخبة من كبار العلماء والمشايخ. نؤمن بأن بناء الإنسان يبدأ من القيم، وأن القرآن الكريم هو المنبع الصافي لهذه القيم.'
-                          : ' Founded in response to the urgent need to organize and develop Da\'wah and Quranic work in Sudan, working under the supervision of elite scholars. We believe human development starts with values sourced from the Quran.'}
+                         {t('aboutText')}
                      </p>
                  </div>
                  <div className="md:w-1/2">
@@ -64,8 +90,8 @@ const About: React.FC = () => {
                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 font-serif">{t('vision')}</h3>
                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
                      {language === 'ar' 
-                      ? 'الريادة والتميز في خدمة كتاب الله تعالى ورعاية أهله، وبناء مجتمع قرآني متمسك بقيمه وهويته.'
-                      : 'Leadership and excellence in serving the Book of Allah and caring for its people, building a Quranic society adhering to its values.'}
+                      ? 'هيئة رائدة تمكن الأئمة والحفظة والدعاة لبناء مجتمع سوداني متسامح، مستنير، ومتمسك بقيمه الدينية الأصيلة.'
+                      : 'A pioneering authority empowering Imams, Huffaz, and Da\'is to build a tolerant, enlightened Sudanese society adhering to authentic religious values.'}
                  </p>
              </div>
              
@@ -76,8 +102,8 @@ const About: React.FC = () => {
                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 font-serif">{t('mission')}</h3>
                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
                      {language === 'ar'
-                      ? 'تمكين الحفظة والأئمة والدعاة علمياً ومهارياً واجتماعياً، وتوفير بيئة محفزة للإبداع في خدمة الدعوة والمجتمع.'
-                      : 'Empowering Huffaz, Imams, and Callers scientifically, skillfully, and socially, providing a stimulating environment for creativity in serving Da\'wah.'}
+                      ? 'الإشراف على تأهيل وتطوير وتنظيم شؤون الأئمة والحفظة والدعاة في السودان، وتعزيز دورهم في بناء الفرد والمجتمع، ونشر الفهم الوسطي المستنير للإسلام.'
+                      : 'Supervising the qualification, development, and organization of affairs for Imams, Huffaz, and Da\'is; enhancing their role in building individuals and society; and spreading the enlightened moderate understanding of Islam.'}
                  </p>
              </div>
          </div>
@@ -85,7 +111,7 @@ const About: React.FC = () => {
          {/* Values */}
          <div className="mb-16 animate-on-scroll">
              <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12 font-serif">{t('values')}</h2>
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                  {values.map((val, idx) => (
                      <div key={idx} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-lg transition text-center border border-gray-100 dark:border-gray-700">
                          <div className="w-14 h-14 mx-auto bg-gray-50 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4 text-islamic-primary dark:text-islamic-gold">
@@ -98,21 +124,19 @@ const About: React.FC = () => {
              </div>
          </div>
 
-         {/* Strategic Goals */}
+         {/* Strategic Axes */}
          <div className="bg-islamic-light dark:bg-gray-800 rounded-3xl p-8 md:p-16 animate-on-scroll">
-             <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-10 font-serif">{language === 'ar' ? 'أهدافنا الاستراتيجية' : 'Strategic Goals'}</h2>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                 {[
-                     language === 'ar' ? 'العناية بالقرآن الكريم تعليماً وحفظاً وتدبراً.' : 'Caring for Quran education, memorization, and reflection.',
-                     language === 'ar' ? 'تأهيل الكوادر الدعوية تأهيلاً شرعياً وعصرياً.' : 'Qualifying Da\'wah cadres with Sharia and modern skills.',
-                     language === 'ar' ? 'رعاية شؤون المساجد والخلاوي وتطوير بيئتها.' : 'Caring for Mosques and Khalwas affairs and developing their environment.',
-                     language === 'ar' ? 'تعزيز الوسطية والاعتدال في المجتمع.' : 'Promoting moderation in society.',
-                     language === 'ar' ? 'استخدام التقنية الحديثة في خدمة الدعوة.' : 'Using modern technology in serving Da\'wah.',
-                     language === 'ar' ? 'تحقيق الاستدامة المالية لمشاريع الهيئة.' : 'Achieving financial sustainability for Authority projects.'
-                 ].map((goal, idx) => (
-                     <div key={idx} className="flex items-start gap-3 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
-                         <CheckCircle className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                         <span className="text-gray-700 dark:text-gray-200 font-medium">{goal}</span>
+             <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-10 font-serif">{language === 'ar' ? 'المحاور الاستراتيجية (2026-2030)' : 'Strategic Axes (2026-2030)'}</h2>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                 {axes.map((axis, idx) => (
+                     <div key={idx} className="flex items-start gap-4 bg-white dark:bg-gray-700 p-6 rounded-xl shadow-sm border-l-4 border-islamic-gold">
+                         <div className="mt-1 min-w-[24px]">
+                             <CheckCircle className="w-6 h-6 text-green-500" />
+                         </div>
+                         <div>
+                             <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2">{language === 'ar' ? axis.titleAr : axis.titleEn}</h4>
+                             <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{language === 'ar' ? axis.descAr : axis.descEn}</p>
+                         </div>
                      </div>
                  ))}
              </div>

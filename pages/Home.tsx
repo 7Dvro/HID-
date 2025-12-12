@@ -16,10 +16,10 @@ const Home: React.FC = () => {
   }, []);
 
   const stats = [
-    { label: t('statsUsers'), value: '15,000+', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-    { label: t('statsImams'), value: '2,500+', icon: MapPin, color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20' },
-    { label: t('statsCourses'), value: '850+', icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20' },
-    { label: t('fatwaAnswered'), value: '12,400+', icon: FileText, color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20' },
+    { label: t('statsUsers'), value: '50,000+', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+    { label: t('statsImams'), value: '5,000+', icon: MapPin, color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20' },
+    { label: t('statsCourses'), value: '14+', icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+    { label: t('fatwaAnswered'), value: '100K+', icon: FileText, color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20' },
   ];
 
   const featuredImams = [
@@ -30,39 +30,39 @@ const Home: React.FC = () => {
   ];
 
   const featuredCourses = [
-      { title: language === 'ar' ? 'فقه العبادات الميسر' : 'Simplified Fiqh', students: 1540, rating: 4.8, image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Fiqh' },
-      { title: language === 'ar' ? 'علوم القرآن والتدبر' : 'Quran Sciences', students: 2100, rating: 4.9, image: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Quran' },
-      { title: language === 'ar' ? 'مهارات الإلقاء' : 'Public Speaking', students: 850, rating: 4.7, image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Skills' },
+      { title: language === 'ar' ? 'برنامج الترخيص المهني للإمام' : 'Professional Imam Licensing', students: 1540, rating: 4.9, image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Qualification' },
+      { title: language === 'ar' ? 'الإعلام الرقمي للدعاة' : 'Digital Media for Da\'is', students: 850, rating: 4.8, image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Skills' },
+      { title: language === 'ar' ? 'الإرشاد الأسري والمجتمعي' : 'Family & Social Counseling', students: 2100, rating: 4.7, image: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Community' },
   ];
 
   const latestNews = [
     {
       id: 1,
-      title: language === 'ar' ? 'انطلاق مسابقة الخرطوم للقرآن الكريم' : 'Khartoum Quran Competition Launch',
-      date: '2024-03-15',
+      title: language === 'ar' ? 'إطلاق حملة "سوداننا.. تسامح وسلام"' : 'Launch of "Our Sudan.. Tolerance & Peace" Campaign',
+      date: '2025-01-15',
       image: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      excerpt: language === 'ar' ? 'أعلنت الهيئة العامة عن بدء التسجيل في الدورة العاشرة من المسابقة...' : 'The General Authority announced the start of registration for the 10th edition...'
+      excerpt: language === 'ar' ? 'حملة وطنية كبرى لتعزيز قيم التعايش السلمي ونبذ خطاب الكراهية في جميع ولايات السودان.' : 'A major national campaign to promote values of peaceful coexistence and reject hate speech across all Sudan states.'
     },
     {
       id: 2,
-      title: language === 'ar' ? 'تدشين تطبيق "منبري" للأئمة' : 'Launch of "Minbari" App for Imams',
-      date: '2024-03-10',
+      title: language === 'ar' ? 'تدشين "منصة السودان الإلكترونية للتعليم الدعوي"' : 'Launch of "Sudan E-Platform for Da\'wah Education"',
+      date: '2025-01-10',
       image: 'https://images.unsplash.com/photo-1552423316-c70a08191e32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      excerpt: language === 'ar' ? 'تطبيق ذكي يساعد الأئمة في إعداد الخطب والتواصل مع المصلين...' : 'A smart app helping Imams prepare Khutbahs and connect with worshipers...'
+      excerpt: language === 'ar' ? 'منصة رقمية متكاملة لتقديم البرامج التأهيلية والدورات العلمية للأئمة والدعاة عن بعد.' : 'An integrated digital platform providing remote qualification programs and scientific courses for Imams and Callers.'
     },
     {
       id: 3,
-      title: language === 'ar' ? 'تخريج دفعة جديدة من الدعاة' : 'Graduation of New Batch of Callers',
-      date: '2024-03-05',
+      title: language === 'ar' ? 'بدء برنامج "سكن كريم" للأئمة والمؤذنين' : 'Start of "Decent Housing" Program for Imams',
+      date: '2025-01-05',
       image: 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      excerpt: language === 'ar' ? 'احتفلت الهيئة بتخريج 500 داعية وداعية بعد إتمام البرنامج التأهيلي...' : 'The Authority celebrated the graduation of 500 Da\'is after completing the program...'
+      excerpt: language === 'ar' ? 'مشروع استراتيجي لتوفير سكن مناسب وتحسين الظروف المعيشية للعاملين في المساجد.' : 'A strategic project to provide suitable housing and improve living conditions for Mosque workers.'
     }
   ];
 
   const fatwaSamples = [
-      { q: language === 'ar' ? 'حكم الصلاة في الطائرة جالساً؟' : 'Ruling on praying sitting in a plane?', a: language === 'ar' ? 'إذا لم تستطع القيام فصل جالساً...' : 'If you cannot stand, pray sitting...' },
-      { q: language === 'ar' ? 'زكاة الفطر نقداً؟' : 'Zakat al-Fitr in cash?', a: language === 'ar' ? 'يجوز عند الحاجة ومصلحة الفقير...' : 'Permissible if it serves the poor\'s interest...' },
-      { q: language === 'ar' ? 'الجمع بين الصلاتين للمطر؟' : 'Combining prayers for rain?', a: language === 'ar' ? 'يجوز إذا كان المطر يبل الثياب...' : 'Permissible if rain soaks clothes...' },
+      { q: language === 'ar' ? 'حكم التعامل بالعملات الرقمية؟' : 'Ruling on Cryptocurrency?', a: language === 'ar' ? 'يجب الرجوع للجهات الرسمية، والأصل الحذر من الغرر...' : 'Refer to official bodies; caution against uncertainty...' },
+      { q: language === 'ar' ? 'ضوابط جمع التبرعات للمساجد؟' : 'Rules for Mosque fundraising?', a: language === 'ar' ? 'يجب أن يكون عبر القنوات الرسمية وتحت إشراف الهيئة...' : 'Must be via official channels under Authority supervision...' },
+      { q: language === 'ar' ? 'دور الإمام في الإصلاح المجتمعي؟' : 'Imam\'s role in social reform?', a: language === 'ar' ? 'الإمام ركيزة أساسية في حل النزاعات ونشر التسامح...' : 'The Imam is a key pillar in conflict resolution...' },
   ];
 
   // Static prayer times for Khartoum (approximate)
@@ -124,7 +124,7 @@ const Home: React.FC = () => {
             <div className="text-center md:text-start max-w-2xl animate-on-scroll">
                 <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full text-islamic-gold text-sm font-bold mb-6 border border-white/10 shadow-lg">
                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                   {language === 'ar' ? 'المنصة الرسمية - جمهورية السودان' : 'Official Platform - Republic of Sudan'}
+                   {language === 'ar' ? 'وزارة الشئون الدينية والأوقاف - جمهورية السودان' : 'Ministry of Religious Affairs - Republic of Sudan'}
                 </div>
                 
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-xl">
@@ -147,7 +147,7 @@ const Home: React.FC = () => {
                         to="/about" 
                         className="bg-white/10 backdrop-blur-md text-white border border-white/30 hover:bg-white/20 px-8 py-4 rounded-full font-bold transition-all flex items-center justify-center gap-2"
                     >
-                        {language === 'ar' ? 'تعرف علينا' : 'Know More'}
+                        {language === 'ar' ? 'استراتيجية الهيئة' : 'Strategy'}
                     </Link>
                 </div>
             </div>
@@ -280,8 +280,8 @@ const Home: React.FC = () => {
                           <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="About HID" className="w-full h-full object-cover transform hover:scale-105 transition duration-700" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
                                 <div className="text-white">
-                                    <p className="font-serif text-2xl mb-1">{language === 'ar' ? 'رؤية طموحة' : 'Ambitious Vision'}</p>
-                                    <p className="text-sm opacity-80">{language === 'ar' ? 'نحو مجتمع قرآني متميز' : 'Towards a distinguished Quranic society'}</p>
+                                    <p className="font-serif text-2xl mb-1">{language === 'ar' ? 'خطة 2026 - 2030' : 'Plan 2026 - 2030'}</p>
+                                    <p className="text-sm opacity-80">{language === 'ar' ? 'نحو مجتمع متسامح ومستنير' : 'Towards a tolerant and enlightened society'}</p>
                                 </div>
                           </div>
                       </div>
@@ -301,10 +301,10 @@ const Home: React.FC = () => {
                       
                       <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-10">
                           {[
-                              language === 'ar' ? 'هوية إسلامية أصيلة' : 'Authentic Islamic Identity',
-                              language === 'ar' ? 'تطوير مستمر' : 'Continuous Development',
-                              language === 'ar' ? 'تقنية حديثة' : 'Modern Technology',
-                              language === 'ar' ? 'مرجعية موثوقة' : 'Trusted Reference'
+                              language === 'ar' ? 'الوسطية والاعتدال' : 'Moderation & Balance',
+                              language === 'ar' ? 'الوحدة الوطنية' : 'National Unity',
+                              language === 'ar' ? 'الاحترافية والعدالة' : 'Professionalism & Justice',
+                              language === 'ar' ? 'الاستنارة ومواكبة العصر' : 'Enlightenment & Modernity'
                           ].map((item, idx) => (
                               <div key={idx} className="flex items-center gap-3 text-gray-800 dark:text-gray-200 font-medium">
                                   <CheckCircle className="w-5 h-5 text-islamic-gold flex-shrink-0" />
@@ -333,9 +333,9 @@ const Home: React.FC = () => {
               <div className="mb-10">
                   <Quote className="w-8 h-8 text-islamic-gold mx-auto mb-6 opacity-50" />
                   <h3 className="text-3xl md:text-5xl font-serif text-white leading-relaxed md:leading-loose">
-                      لَّقَدْ كَانَ لَكُمْ فِي رَسُولِ ٱللَّهِ أُسْوَةٌ حَسَنَةٌ لِّمَن كَانَ يَرْجُوا۟ ٱللَّهَ وَٱلْيَوْمَ ٱلْأَخِرَ وَذَكَرَ ٱللَّهَ كَثِيرًا
+                      وَلْتَكُن مِّنكُمْ أُمَّةٌ يَدْعُونَ إِلَى ٱلْخَيْرِ وَيَأْمُرُونَ بِٱلْمَعْرُوفِ وَيَنْهَوْنَ عَنِ ٱلْمُنكَرِ ۚ وَأُو۟لَٰٓئِكَ هُمُ ٱلْمُفْلِحُونَ
                   </h3>
-                  <p className="text-gray-400 mt-6 font-serif text-lg">{language === 'ar' ? 'سورة الأحزاب - الآية 21' : 'Surah Al-Ahzab - Ayah 21'}</p>
+                  <p className="text-gray-400 mt-6 font-serif text-lg">{language === 'ar' ? 'سورة آل عمران - الآية 104' : 'Surah Ali Imran - Ayah 104'}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -356,14 +356,14 @@ const Home: React.FC = () => {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 animate-on-scroll">
                <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-wider text-sm">{language === 'ar' ? 'خدماتنا' : 'Our Services'}</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-2 font-serif">{language === 'ar' ? 'قطاعات الهيئة الرئيسية' : 'Main Authority Sectors'}</h2>
+               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-2 font-serif">{language === 'ar' ? 'محاور العمل الاستراتيجي' : 'Strategic Action Axes'}</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
-                    { link: '/quran', icon: BookOpen, title: 'quran', descAr: 'المصحف التفاعلي، مكتبة المتون، إدارة الخلاوي.', descEn: 'Interactive Mushaf, Mutoon, Khalwa Mgmt.', img: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-                    { link: '/imams', icon: UserCheck, title: 'imams', descAr: 'تطبيق منبري، مكتبة الخطب، وتطوير المهارات.', descEn: 'Minbari App, Khutbah Library, Skills Dev.', img: 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-                    { link: '/callers', icon: Mic2, title: 'callers', descAr: 'صناعة المحتوى، مواجهة الشبهات، والتدريب.', descEn: 'Content Creation, Addressing Doubts, Training.', img: 'https://images.unsplash.com/photo-1544427920-29e812502c64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
+                    { link: '/quran', icon: BookOpen, title: 'quran', descAr: 'تنمية مشاريع الخلاوي والتحفيظ ورعاية دور المرأة.', descEn: 'Developing Khalwas projects and caring for women\'s centers.', img: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+                    { link: '/imams', icon: UserCheck, title: 'imams', descAr: 'الترخيص المهني، تحسين الأوضاع المعيشية، والرعاية الصحية.', descEn: 'Professional licensing, improving living conditions, and healthcare.', img: 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+                    { link: '/callers', icon: Mic2, title: 'callers', descAr: 'التأثير المجتمعي، نشر الوسطية، ومحاربة التطرف.', descEn: 'Societal impact, spreading moderation, and fighting extremism.', img: 'https://images.unsplash.com/photo-1544427920-29e812502c64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
                 ].map((item, idx) => (
                     <Link key={idx} to={item.link} className="group relative rounded-3xl overflow-hidden h-96 shadow-lg animate-on-scroll" style={{ animationDelay: `${idx * 150}ms` }}>
                         <div className="absolute inset-0">
@@ -441,7 +441,7 @@ const Home: React.FC = () => {
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-serif">{t('contentGuide')}</h3>
                       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                          {language === 'ar' ? 'دليلك الشامل لإنتاج المحتوى الدعوي المرئي والمسموع بأعلى جودة.' : 'Comprehensive guide for producing high-quality audio-visual Da\'wah content.'}
+                          {language === 'ar' ? 'دليل شامل لإنتاج محتوى دعوي رقمي يواكب العصر.' : 'Comprehensive guide for producing modern digital Da\'wah content.'}
                       </p>
                       <span className="text-purple-600 dark:text-purple-400 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
                           {t('viewDetails')} {language === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -454,7 +454,7 @@ const Home: React.FC = () => {
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-serif">{t('shubuhatGuide')}</h3>
                       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                          {language === 'ar' ? 'مكتبة متخصصة للرد على الشبهات الفكرية والعقدية المعاصرة.' : 'Specialized library for addressing contemporary intellectual and doctrinal doubts.'}
+                          {language === 'ar' ? 'أدوات علمية لمجابهة التطرف والأفكار الهدامة.' : 'Scientific tools to confront extremism and destructive ideas.'}
                       </p>
                       <span className="text-red-600 dark:text-red-400 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
                           {t('viewDetails')} {language === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -467,7 +467,7 @@ const Home: React.FC = () => {
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-serif">{t('skillsGuide')}</h3>
                       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                          {language === 'ar' ? 'دورات في فن الإلقاء، الحوار، ولغة الجسد للتأثير في الجمهور.' : 'Courses in public speaking, dialogue, and body language to influence the audience.'}
+                          {language === 'ar' ? 'تنمية مهارات الحوار والإقناع وبناء السلام الاجتماعي.' : 'Developing dialogue, persuasion, and social peace building skills.'}
                       </p>
                       <span className="text-blue-600 dark:text-blue-400 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
                           {t('viewDetails')} {language === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -484,17 +484,17 @@ const Home: React.FC = () => {
               <h2 className="text-3xl md:text-5xl font-bold text-white font-serif mb-6">{t('discoverCenters')}</h2>
               <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed">
                   {language === 'ar' 
-                   ? 'اكتشف آلاف المساجد والخلاوي القرآنية في جميع أنحاء السودان، وتعرف على برامجها وأنشطتها.' 
-                   : 'Discover thousands of Mosques and Quranic Khalwas across Sudan, and learn about their programs and activities.'}
+                   ? 'برنامج "مساجد صديقة للأسرة والطفل" وتطوير الخلاوي القرآنية.' 
+                   : '"Family-Friendly Mosques" program and development of Quranic Khalwas.'}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link to="/quran" className="bg-white text-islamic-primary px-8 py-3.5 rounded-full font-bold hover:bg-gray-100 transition shadow-lg flex items-center justify-center gap-2">
                       <MapPin className="w-5 h-5" />
-                      {language === 'ar' ? 'البحث في الخريطة' : 'Search Map'}
+                      {language === 'ar' ? 'دليل الخلاوي' : 'Khalwas Guide'}
                   </Link>
                   <Link to="/support" className="bg-islamic-gold text-white px-8 py-3.5 rounded-full font-bold hover:bg-yellow-600 transition shadow-lg flex items-center justify-center gap-2">
                       <Heart className="w-5 h-5" />
-                      {language === 'ar' ? 'ساهم في البناء' : 'Support Building'}
+                      {language === 'ar' ? 'دعم صندوق الرعاية' : 'Support Care Fund'}
                   </Link>
               </div>
           </div>
@@ -506,7 +506,7 @@ const Home: React.FC = () => {
               <div className="flex justify-between items-end mb-12 animate-on-scroll">
                   <div>
                       <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white font-serif">{t('latestCourses')}</h2>
-                      <p className="text-gray-500 dark:text-gray-400 mt-2">{language === 'ar' ? 'طور معارفك الشرعية ومهاراتك الدعوية' : 'Develop your Islamic knowledge and skills'}</p>
+                      <p className="text-gray-500 dark:text-gray-400 mt-2">{language === 'ar' ? 'برامج التأهيل العلمي والمهني المستمر' : 'Continuous scientific and professional qualification programs'}</p>
                   </div>
                   <Link to="/education" className="hidden md:flex items-center gap-2 text-islamic-primary dark:text-islamic-gold font-bold hover:gap-3 transition">
                       {t('viewAll')} {language === 'ar' ? <ArrowLeft className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
@@ -537,7 +537,7 @@ const Home: React.FC = () => {
                               <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
                                   <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-xs">
                                       <GraduationCap className="w-4 h-4" />
-                                      {language === 'ar' ? 'شهادة معتمدة' : 'Certified'}
+                                      {language === 'ar' ? 'دبلوم معتمد' : 'Accredited Diploma'}
                                   </div>
                                   <Link to="/education" className="text-islamic-primary font-bold text-sm hover:underline">
                                       {language === 'ar' ? 'سجل الآن' : 'Enroll Now'}
@@ -598,7 +598,7 @@ const Home: React.FC = () => {
                               </div>
                               <div>
                                   <p className="text-sm font-bold text-gray-900 dark:text-white">{t('heroTitle')}</p>
-                                  <p className="text-xs text-gray-500 dark:text-gray-400">{language === 'ar' ? 'لجنة الفتوى والإرشاد' : 'Fatwa & Guidance Committee'}</p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">{language === 'ar' ? 'بنك الفتاوى المركزي' : 'Central Fatwa Bank'}</p>
                               </div>
                           </div>
                       </div>
@@ -658,8 +658,8 @@ const Home: React.FC = () => {
            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 font-serif">{t('supportProjects')}</h2>
            <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
              {language === 'ar' 
-               ? 'كن شريكاً في الخير.. ساهم في دعم مشاريع التحفيظ، بناء المساجد، وتأهيل الدعاة.' 
-               : 'Be a partner in good.. Contribute to Quran memorization projects, building Mosques, and qualifying Callers.'}
+               ? 'ساهم في "صندوق رعاية الأئمة والحفظة" وبرنامج "سكن كريم"، وكن شريكاً في استقرار ونهضة العمل الدعوي.' 
+               : 'Contribute to the "Imams & Huffaz Care Fund" and "Decent Housing" program, and partner in the stability and renaissance of Da\'wah work.'}
            </p>
            <Link to="/support" className="inline-block bg-islamic-primary text-white px-12 py-5 rounded-full font-bold text-lg hover:bg-islamic-dark shadow-2xl hover:shadow-islamic-primary/50 transition transform hover:-translate-y-1">
              {language === 'ar' ? 'تبرع الآن' : 'Donate Now'}

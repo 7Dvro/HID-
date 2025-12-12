@@ -51,8 +51,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col transition-colors duration-300">
         
         {/* Header */}
         <div className="bg-islamic-primary p-8 text-center text-white relative overflow-hidden">
@@ -80,16 +80,16 @@ const Login: React.FC = () => {
 
         {/* Body */}
         <div className="p-8">
-            <div className="flex gap-4 mb-8 p-1 bg-gray-100 rounded-lg">
+            <div className="flex gap-4 mb-8 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
                 <button 
                     onClick={() => setIsLogin(true)}
-                    className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${isLogin ? 'bg-white text-islamic-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${isLogin ? 'bg-white dark:bg-gray-600 text-islamic-primary shadow-sm' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white'}`}
                 >
                     {t('login')}
                 </button>
                 <button 
                     onClick={() => setIsLogin(false)}
-                    className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${!isLogin ? 'bg-white text-islamic-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${!isLogin ? 'bg-white dark:bg-gray-600 text-islamic-primary shadow-sm' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white'}`}
                 >
                     {t('register')}
                 </button>
@@ -98,38 +98,38 @@ const Login: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                     <div className="relative group">
-                        <User className="absolute top-3 start-3 text-gray-400 w-5 h-5 group-focus-within:text-islamic-primary transition" />
+                        <User className="absolute top-3 start-3 text-gray-400 dark:text-gray-500 w-5 h-5 group-focus-within:text-islamic-primary transition" />
                         <input 
                             type="text" 
                             required={!isLogin}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full ps-10 pe-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition"
+                            className="w-full ps-10 pe-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-600 focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder={t('fullName')}
                         />
                     </div>
                 )}
 
                 <div className="relative group">
-                    <Mail className="absolute top-3 start-3 text-gray-400 w-5 h-5 group-focus-within:text-islamic-primary transition" />
+                    <Mail className="absolute top-3 start-3 text-gray-400 dark:text-gray-500 w-5 h-5 group-focus-within:text-islamic-primary transition" />
                     <input 
                         type="email" 
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full ps-10 pe-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition"
+                        className="w-full ps-10 pe-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-600 focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder={t('email')}
                     />
                 </div>
 
                 <div className="relative group">
-                    <Lock className="absolute top-3 start-3 text-gray-400 w-5 h-5 group-focus-within:text-islamic-primary transition" />
+                    <Lock className="absolute top-3 start-3 text-gray-400 dark:text-gray-500 w-5 h-5 group-focus-within:text-islamic-primary transition" />
                     <input 
                         type="password" 
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full ps-10 pe-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition"
+                        className="w-full ps-10 pe-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-600 focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder={t('password')}
                     />
                 </div>
@@ -146,15 +146,15 @@ const Login: React.FC = () => {
             </form>
 
             <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
-                <div className="relative flex justify-center text-xs uppercase"><span className="px-2 bg-white text-gray-400">{t('or')}</span></div>
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200 dark:border-gray-700"></div></div>
+                <div className="relative flex justify-center text-xs uppercase"><span className="px-2 bg-white dark:bg-gray-800 text-gray-400">{t('or')}</span></div>
             </div>
 
             <button 
                 onClick={handleGoogleLogin}
                 type="button"
                 disabled={loading}
-                className="w-full bg-white text-gray-700 border border-gray-200 py-3 rounded-lg font-bold hover:bg-gray-50 transition flex items-center justify-center gap-3"
+                className="w-full bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 py-3 rounded-lg font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center justify-center gap-3"
             >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -165,7 +165,7 @@ const Login: React.FC = () => {
                 {t('continueWithGoogle')}
             </button>
             
-            <p className="mt-6 text-center text-xs text-gray-500">
+            <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
                 {isLogin ? t('dontHaveAccount') : t('alreadyHaveAccount')}{' '}
                 <button 
                     onClick={() => setIsLogin(!isLogin)}
