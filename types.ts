@@ -7,6 +7,10 @@ export interface User {
   email: string;
   role: 'user' | 'imam' | 'admin';
   avatar?: string;
+  bio?: string;
+  phone?: string;
+  location?: string;
+  joinDate?: string;
 }
 
 export interface Imam {

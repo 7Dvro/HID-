@@ -24,6 +24,20 @@
             fontFamily: {
               sans: ['Cairo', 'sans-serif'],
               serif: ['Amiri', 'serif'],
+            },
+            animation: {
+              'fade-up': 'fadeUp 0.8s ease-out forwards',
+              'fade-in': 'fadeIn 0.5s ease-out forwards',
+            },
+            keyframes: {
+              fadeUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              }
             }
           }
         }
@@ -31,7 +45,12 @@
     </script>
     <style>
       body {
-        background-color: #f9fafb;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      /* Dark mode base styles applied via JS class 'dark' */
+      .dark body {
+        background-color: #111827; /* gray-900 */
+        color: #f3f4f6; /* gray-100 */
       }
       /* Custom scrollbar for better aesthetics */
       ::-webkit-scrollbar {
@@ -40,6 +59,9 @@
       ::-webkit-scrollbar-track {
         background: #f1f1f1; 
       }
+      .dark ::-webkit-scrollbar-track {
+        background: #1f2937; /* gray-800 */
+      }
       ::-webkit-scrollbar-thumb {
         background: #006B3F; 
         border-radius: 4px;
@@ -47,6 +69,14 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #004B2D; 
       }
+      
+      .animate-on-scroll {
+        opacity: 0;
+        animation: fadeUp 0.8s ease-out forwards;
+      }
+      .delay-100 { animation-delay: 0.1s; }
+      .delay-200 { animation-delay: 0.2s; }
+      .delay-300 { animation-delay: 0.3s; }
     </style>
   <script type="importmap">
 {
@@ -64,5 +94,6 @@
 </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
