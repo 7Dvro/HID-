@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             name: 'مدير النظام',
             email: email,
             role: 'admin',
-            avatar: 'https://picsum.photos/id/64/200/200',
+            avatar: 'https://ui-avatars.com/api/?name=Admin&background=006B3F&color=fff',
             joinDate: new Date().toISOString()
           });
         } else {
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             name: 'أحمد محمد',
             email: email,
             role: 'user',
-            avatar: 'https://picsum.photos/id/1005/200/200',
+            avatar: 'https://ui-avatars.com/api/?name=Ahmed&background=006B3F&color=fff',
             joinDate: new Date().toISOString(),
             bio: 'مهتم بعلوم القرآن والشريعة',
             location: 'الرياض، السعودية'
@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           name: 'Google User',
           email: 'user@gmail.com',
           role: 'user',
-          avatar: 'https://lh3.googleusercontent.com/a/default-user',
+          avatar: 'https://ui-avatars.com/api/?name=Google+User&background=4285F4&color=fff',
           joinDate: new Date().toISOString()
         });
         resolve(true);

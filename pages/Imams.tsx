@@ -53,6 +53,25 @@ const Imams: React.FC = () => {
   const [commentInputs, setCommentInputs] = useState<{[key: number]: string}>({});
   const [contactModalOpen, setContactModalOpen] = useState(false);
 
+  // Safe images for avatars and covers
+  const avatarImages = [
+      'https://images.unsplash.com/photo-1590076215667-25cb4840eb19?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1594382029377-b9c92cc2ce6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1534579222473-b3c76b97b0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1614742790937-2938a9d68bd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1576670158466-9a29e1208940?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1584286595398-a59f21d313f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1591216109968-3e504ba415f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+  ];
+
+  const coverImages = [
+      'https://images.unsplash.com/photo-1564121211835-e88c852648ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+  ];
+
   // Generate Mock Data
   const imams: DetailedImam[] = Array.from({ length: 8 }, (_, i) => ({
     id: i,
@@ -60,8 +79,8 @@ const Imams: React.FC = () => {
     role: language === 'ar' ? 'إمام وخطيب' : 'Imam & Khatib',
     location: language === 'ar' ? ['الخرطوم، السودان', 'أم درمان، السودان', 'بحري، السودان', 'بورتسودان'][i % 4] : ['Khartoum, Sudan', 'Omdurman, Sudan', 'Bahri, Sudan', 'Port Sudan'][i % 4],
     rating: (4 + Math.random()).toFixed(1),
-    image: `https://picsum.photos/seed/imamlist${i}/300/300`,
-    coverImage: `https://picsum.photos/seed/cover${i}/800/300`,
+    image: avatarImages[i % avatarImages.length],
+    coverImage: coverImages[i % coverImages.length],
     bio: language === 'ar' 
       ? 'إمام وخطيب ذو خبرة تمتد لأكثر من 15 عاماً في الدعوة والإرشاد. متخصص في الفقه المقارن وقضايا الأسرة المعاصرة. يسعى لنشر الوسطية والاعتدال.' 
       : 'Imam and Khatib with over 15 years of experience in Da\'wah. Specialized in Comparative Fiqh and contemporary family issues. Striving to spread moderation.',
@@ -80,7 +99,7 @@ const Imams: React.FC = () => {
           : 'One of the greatest blessings of Allah upon a servant is to guide him to remembrance and gratitude. O Allah, help us to remember You, thank You, and worship You well.',
         likes: 45,
         comments: [
-          { id: 1, user: 'Ahmed', text: language === 'ar' ? 'آمين يا رب العالمين' : 'Ameen', date: '1h ago', avatar: 'https://ui-avatars.com/api/?name=Ahmed&background=random' }
+          { id: 1, user: 'Ahmed', text: language === 'ar' ? 'آمين يا رب العالمين' : 'Ameen', date: '1h ago', avatar: `https://ui-avatars.com/api/?name=Ahmed&background=006B3F&color=fff` }
         ]
       },
       {
@@ -89,7 +108,7 @@ const Imams: React.FC = () => {
         content: language === 'ar' 
           ? 'صور من درس الأمس في المسجد الكبير. سعدت بحضوركم ومشاركاتكم القيمة.' 
           : 'Photos from yesterday\'s lesson at the Grand Mosque. Happy with your attendance and valuable participation.',
-        image: `https://picsum.photos/seed/post${i}/600/400`,
+        image: coverImages[(i + 1) % coverImages.length],
         likes: 120,
         comments: []
       }
@@ -143,7 +162,7 @@ const Imams: React.FC = () => {
         user: user.name,
         text: text,
         date: language === 'ar' ? 'الآن' : 'Just now',
-        avatar: user.avatar || `https://ui-avatars.com/api/?name=${user.name}`
+        avatar: user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=006B3F&color=fff`
     };
 
     const updatedPosts = selectedImam.posts.map(post => {
@@ -438,7 +457,7 @@ const Imams: React.FC = () => {
                                             )}
                                             
                                             <div className="flex gap-2">
-                                                <img src={user?.avatar || "https://picsum.photos/200"} className="w-8 h-8 rounded-full mt-1" alt="" />
+                                                <img src={user?.avatar || "https://ui-avatars.com/api/?name=User&background=006B3F&color=fff"} className="w-8 h-8 rounded-full mt-1" alt="" />
                                                 <div className="flex-1 relative">
                                                     <input 
                                                         type="text" 

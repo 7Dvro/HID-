@@ -14,16 +14,16 @@ const Home: React.FC = () => {
   ];
 
   const featuredImams = [
-      { name: language === 'ar' ? 'الشيخ محمد إبراهيم' : 'Sheikh Mohammed Ibrahim', role: language === 'ar' ? 'إمام وخطيب' : 'Imam & Khatib', image: 'https://picsum.photos/seed/imam1/200/200', location: language === 'ar' ? 'الخرطوم' : 'Khartoum' },
-      { name: language === 'ar' ? 'د. سارة علي' : 'Dr. Sarah Ali', role: language === 'ar' ? 'أستاذة التفسير' : 'Tafsir Professor', image: 'https://picsum.photos/seed/imam2/200/200', location: language === 'ar' ? 'أم درمان' : 'Omdurman' },
-      { name: language === 'ar' ? 'الشيخ عبدالله صالح' : 'Sheikh Abdullah Saleh', role: language === 'ar' ? 'مقرئ' : 'Reciter', image: 'https://picsum.photos/seed/imam3/200/200', location: language === 'ar' ? 'بحري' : 'Bahri' },
-      { name: language === 'ar' ? 'الشيخ عمر أحمد' : 'Sheikh Omar Ahmed', role: language === 'ar' ? 'داعية' : 'Da\'i', image: 'https://picsum.photos/seed/imam4/200/200', location: language === 'ar' ? 'بورتسودان' : 'Port Sudan' },
+      { name: language === 'ar' ? 'الشيخ محمد إبراهيم' : 'Sheikh Mohammed Ibrahim', role: language === 'ar' ? 'إمام وخطيب' : 'Imam & Khatib', image: 'https://images.unsplash.com/photo-1590076215667-25cb4840eb19?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', location: language === 'ar' ? 'الخرطوم' : 'Khartoum' },
+      { name: language === 'ar' ? 'د. عثمان الخميس' : 'Dr. Othman Al-Khamis', role: language === 'ar' ? 'أستاذ العقيدة' : 'Aqeedah Professor', image: 'https://images.unsplash.com/photo-1594382029377-b9c92cc2ce6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', location: language === 'ar' ? 'أم درمان' : 'Omdurman' },
+      { name: language === 'ar' ? 'الشيخ عبدالله صالح' : 'Sheikh Abdullah Saleh', role: language === 'ar' ? 'مقرئ' : 'Reciter', image: 'https://images.unsplash.com/photo-1534579222473-b3c76b97b0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', location: language === 'ar' ? 'بحري' : 'Bahri' },
+      { name: language === 'ar' ? 'الشيخ عمر أحمد' : 'Sheikh Omar Ahmed', role: language === 'ar' ? 'داعية' : 'Da\'i', image: 'https://images.unsplash.com/photo-1614742790937-2938a9d68bd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', location: language === 'ar' ? 'بورتسودان' : 'Port Sudan' },
   ];
 
   const featuredCourses = [
-      { title: language === 'ar' ? 'فقه العبادات الميسر' : 'Simplified Fiqh', students: 1540, rating: 4.8, image: 'https://picsum.photos/seed/fiqh/400/250', category: 'Fiqh' },
-      { title: language === 'ar' ? 'علوم القرآن والتدبر' : 'Quran Sciences', students: 2100, rating: 4.9, image: 'https://picsum.photos/seed/quran/400/250', category: 'Quran' },
-      { title: language === 'ar' ? 'مهارات الإلقاء' : 'Public Speaking', students: 850, rating: 4.7, image: 'https://picsum.photos/seed/speech/400/250', category: 'Skills' },
+      { title: language === 'ar' ? 'فقه العبادات الميسر' : 'Simplified Fiqh', students: 1540, rating: 4.8, image: 'https://images.unsplash.com/photo-1591216109968-3e504ba415f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Fiqh' },
+      { title: language === 'ar' ? 'علوم القرآن والتدبر' : 'Quran Sciences', students: 2100, rating: 4.9, image: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Quran' },
+      { title: language === 'ar' ? 'مهارات الإلقاء' : 'Public Speaking', students: 850, rating: 4.7, image: 'https://images.unsplash.com/photo-1576670158466-9a29e1208940?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', category: 'Skills' },
   ];
 
   const latestNews = [
@@ -31,21 +31,21 @@ const Home: React.FC = () => {
       id: 1,
       title: language === 'ar' ? 'انطلاق مسابقة الخرطوم للقرآن الكريم' : 'Khartoum Quran Competition Launch',
       date: '2024-03-15',
-      image: 'https://picsum.photos/seed/news1/600/400',
+      image: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'أعلنت الهيئة العامة عن بدء التسجيل في الدورة العاشرة من المسابقة...' : 'The General Authority announced the start of registration for the 10th edition...'
     },
     {
       id: 2,
       title: language === 'ar' ? 'تدشين تطبيق "منبري" للأئمة' : 'Launch of "Minbari" App for Imams',
       date: '2024-03-10',
-      image: 'https://picsum.photos/seed/news2/600/400',
+      image: 'https://images.unsplash.com/photo-1616593437252-0630a5ecb504?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'تطبيق ذكي يساعد الأئمة في إعداد الخطب والتواصل مع المصلين...' : 'A smart app helping Imams prepare Khutbahs and connect with worshipers...'
     },
     {
       id: 3,
       title: language === 'ar' ? 'تخريج دفعة جديدة من الدعاة' : 'Graduation of New Batch of Callers',
       date: '2024-03-05',
-      image: 'https://picsum.photos/seed/news3/600/400',
+      image: 'https://images.unsplash.com/photo-1564121211835-e88c852648ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'احتفلت الهيئة بتخريج 500 داعية وداعية بعد إتمام البرنامج التأهيلي...' : 'The Authority celebrated the graduation of 500 Da\'is after completing the program...'
     }
   ];
@@ -552,7 +552,7 @@ const Home: React.FC = () => {
                   
                   <div className="relative animate-on-scroll delay-100">
                       <div className="absolute -inset-4 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-3xl transform rotate-2"></div>
-                      <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Fatwa" className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover" />
+                      <img src="https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Fatwa" className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover" />
                       <div className="absolute bottom-8 left-8 right-8 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-6 rounded-xl shadow-lg">
                           <div className="flex items-center gap-4">
                               <div className="w-12 h-12 bg-islamic-primary rounded-full flex items-center justify-center text-white font-bold text-lg">

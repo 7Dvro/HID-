@@ -17,6 +17,13 @@ interface Reciter {
 // قائمة القراء المعتمدين (تضم قراء السودان)
 const RECITERS: Reciter[] = [
   {
+    id: 'sudais',
+    nameAr: 'الشيخ عبد الرحمن السديس',
+    nameEn: 'Sheikh Abdul Rahman Al-Sudais',
+    serverFull: 'https://server11.mp3quran.net/sds/',
+    serverVerse: 'Abdurrahmaan_As-Sudais_192kbps'
+  },
+  {
     id: 'noreen',
     nameAr: 'الشيخ نورين محمد صديق (رحمه الله)',
     nameEn: 'Sheikh Noreen Muhammad Siddiq',
@@ -50,13 +57,6 @@ const RECITERS: Reciter[] = [
     nameEn: 'Sheikh Maher Al-Muaiqly',
     serverFull: 'https://server12.mp3quran.net/maher/',
     serverVerse: 'MaherAlMuaiqly128kbps'
-  },
-  {
-    id: 'sudais',
-    nameAr: 'الشيخ عبد الرحمن السديس',
-    nameEn: 'Sheikh Abdul Rahman Al-Sudais',
-    serverFull: 'https://server11.mp3quran.net/sds/',
-    serverVerse: 'Abdurrahmaan_As-Sudais_192kbps'
   }
 ];
 
@@ -67,7 +67,7 @@ const Quran: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Reciter State
-  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[0]); // Default to Noreen
+  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[0]); // Default to Sudais
   const [isReciterMenuOpen, setIsReciterMenuOpen] = useState(false);
 
   // Audio State

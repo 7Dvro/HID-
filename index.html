@@ -70,10 +70,26 @@
         background: #004B2D; 
       }
       
-      .animate-on-scroll {
-        opacity: 0;
-        animation: fadeUp 0.8s ease-out forwards;
+      /* Explicit Keyframes definition for non-Tailwind usage in manual classes */
+      @keyframes fadeUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
       }
+
+      .animate-on-scroll {
+        opacity: 0; /* Default hidden */
+        animation: fadeUp 0.8s ease-out forwards; /* Run animation immediately */
+      }
+      
+      /* Ensure content is visible if animation fails or reduced motion is on */
+      @media (prefers-reduced-motion: reduce) {
+        .animate-on-scroll {
+          opacity: 1;
+          animation: none;
+          transform: none;
+        }
+      }
+
       .delay-100 { animation-delay: 0.1s; }
       .delay-200 { animation-delay: 0.2s; }
       .delay-300 { animation-delay: 0.3s; }

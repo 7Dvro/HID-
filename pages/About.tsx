@@ -50,7 +50,7 @@ const About: React.FC = () => {
                      </p>
                  </div>
                  <div className="md:w-1/2">
-                     <img src="https://picsum.photos/seed/aboutmain/800/600" alt="Meeting" className="rounded-xl shadow-lg w-full" />
+                     <img src="https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Islamic Center" className="rounded-xl shadow-lg w-full object-cover" />
                  </div>
              </div>
          </div>
