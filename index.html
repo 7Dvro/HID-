@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HID Authority | الهيئة العامة للحفظة والأئمة والدعاة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              islamic: {
+                primary: '#006B3F',
+                dark: '#004B2D',
+                gold: '#D4AF37',
+                light: '#F3F8F5'
+              }
+            },
+            fontFamily: {
+              sans: ['Cairo', 'sans-serif'],
+              serif: ['Amiri', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #f9fafb;
+      }
+      /* Custom scrollbar for better aesthetics */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #006B3F; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #004B2D; 
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "recharts": "https://esm.sh/recharts@^3.5.1",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.560.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

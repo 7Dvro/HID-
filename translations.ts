@@ -1,0 +1,30 @@
+import { Translation } from './types';
+
+export const translations: Translation = {
+  home: { ar: 'الرئيسية', en: 'Home' },
+  about: { ar: 'من نحن', en: 'About Us' },
+  quran: { ar: 'القرآن الكريم', en: 'Quran' },
+  imams: { ar: 'الدليل', en: 'Directory' }, // Shortened for nav
+  education: { ar: 'التعليم', en: 'Education' },
+  fatwa: { ar: 'الفتاوى', en: 'Fatwa' },
+  contact: { ar: 'اتصل بنا', en: 'Contact' },
+  login: { ar: 'تسجيل الدخول', en: 'Login' },
+  logout: { ar: 'تسجيل الخروج', en: 'Logout' },
+  dashboard: { ar: 'لوحة التحكم', en: 'Dashboard' },
+  heroTitle: { ar: 'الهيئة العامة للحفظة والأئمة والدعاة', en: 'HID Authority' },
+  heroSubtitle: { ar: 'منصة شاملة لخدمة كتاب الله وأهل العلم والدعوة', en: 'A comprehensive platform serving the Book of Allah, scholars, and Da\'wah.' },
+  exploreCourses: { ar: 'تصفح الدورات', en: 'Explore Courses' },
+  askFatwa: { ar: 'اسأل مفتي', en: 'Ask a Fatwa' },
+  latestNews: { ar: 'آخر الأخبار', en: 'Latest News' },
+  featuredImams: { ar: 'نخبة من الأئمة', en: 'Featured Imams' },
+  statsUsers: { ar: 'مستفيد', en: 'Beneficiaries' },
+  statsImams: { ar: 'إمام وخطيب', en: 'Imams & Khatibs' },
+  statsCourses: { ar: 'دورة تعليمية', en: 'Courses' },
+  copyright: { ar: 'جميع الحقوق محفوظة © 2024 الهيئة العامة', en: 'All rights reserved © 2024 HID Authority' },
+  askAi: { ar: 'المساعد الذكي', en: 'AI Assistant' },
+  fatwaDisclaimer: { ar: 'ملاحظة: الإجابات المولدة بالذكاء الاصطناعي للاسترشاد فقط ولا تغني عن فتوى شرعية معتمدة.', en: 'Note: AI-generated answers are for guidance only and do not replace certified religious rulings.' },
+  adminWelcome: { ar: 'مرحباً بك في لوحة التحكم', en: 'Welcome to the Dashboard' },
+  users: { ar: 'المستخدمين', en: 'Users' },
+  content: { ar: 'المحتوى', en: 'Content' },
+  reports: { ar: 'التقارير', en: 'Reports' },
+};
