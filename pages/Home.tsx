@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Users, BookOpen, UserCheck, ArrowRight, ArrowLeft, Heart, Mic2, FileText, Calendar, CheckCircle, MapPin, Star, GraduationCap, ChevronRight, PlayCircle, MessageCircle, HelpCircle, Sparkles, Quote, Video, PenTool, ShieldAlert, Laptop, Search, Coins, Clock, Sun, Moon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const { t, language } = useLanguage();
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update clock every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const stats = [
     { label: t('statsUsers'), value: '15,000+', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
@@ -56,14 +65,43 @@ const Home: React.FC = () => {
       { q: language === 'ar' ? 'الجمع بين الصلاتين للمطر؟' : 'Combining prayers for rain?', a: language === 'ar' ? 'يجوز إذا كان المطر يبل الثياب...' : 'Permissible if rain soaks clothes...' },
   ];
 
+  // Static prayer times for Khartoum (approximate)
   const prayers = [
-    { name: 'fajr', time: '04:45 AM', icon: Moon },
-    { name: 'sunrise', time: '06:05 AM', icon: Sun },
-    { name: 'dhuhr', time: '12:15 PM', icon: Sun },
-    { name: 'asr', time: '03:45 PM', icon: Sun },
-    { name: 'maghrib', time: '06:25 PM', icon: Moon },
-    { name: 'isha', time: '07:55 PM', icon: Moon },
+    { name: 'fajr', time: '04:45 AM', icon: Moon, hour: 4, minute: 45 },
+    { name: 'sunrise', time: '06:05 AM', icon: Sun, hour: 6, minute: 5 },
+    { name: 'dhuhr', time: '12:15 PM', icon: Sun, hour: 12, minute: 15 },
+    { name: 'asr', time: '03:45 PM', icon: Sun, hour: 15, minute: 45 },
+    { name: 'maghrib', time: '06:25 PM', icon: Moon, hour: 18, minute: 25 },
+    { name: 'isha', time: '07:55 PM', icon: Moon, hour: 19, minute: 55 },
   ];
+
+  // Logic to find next prayer
+  const getNextPrayer = () => {
+    const currentHour = currentTime.getHours();
+    const currentMinute = currentTime.getMinutes();
+    const currentTotalMinutes = currentHour * 60 + currentMinute;
+
+    // Filter out Sunrise as it's not a prayer for "Next Prayer" usually, but kept in list for display
+    const prayerTimes = prayers.filter(p => p.name !== 'sunrise');
+    
+    for (let p of prayerTimes) {
+      const prayerTotalMinutes = p.hour * 60 + p.minute;
+      if (prayerTotalMinutes > currentTotalMinutes) {
+        return p;
+      }
+    }
+    // If no prayer left today, return Fajr (index 0)
+    return prayers[0];
+  };
+
+  const nextPrayer = getNextPrayer();
+
+  // Dynamic Hijri Date
+  const hijriDate = new Intl.DateTimeFormat(language === 'ar' ? 'ar-SA-u-ca-islamic' : 'en-US-u-ca-islamic', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(currentTime);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -156,8 +194,8 @@ const Home: React.FC = () => {
                       </div>
                       <div>
                           <h3 className="text-lg font-bold text-gray-900 dark:text-white font-serif">{t('prayerTimes')}</h3>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                              <MapPin className="w-3 h-3" /> {t('khartoumTime')}
+                          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 font-mono">
+                              <MapPin className="w-3 h-3" /> {t('khartoumTime')} ({currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })})
                           </p>
                       </div>
                   </div>
@@ -165,13 +203,13 @@ const Home: React.FC = () => {
                       <div className="text-center md:text-start">
                           <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('hijriDate')}</p>
                           <p className="text-sm font-bold text-islamic-primary dark:text-islamic-gold font-serif">
-                              15 {language === 'ar' ? 'رمضان' : 'Ramadan'} 1445
+                              {hijriDate}
                           </p>
                       </div>
                       <div className="text-center md:text-start border-s border-gray-300 dark:border-gray-600 ps-4">
                           <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('nextPrayer')}</p>
                           <p className="text-sm font-bold text-islamic-primary dark:text-islamic-gold font-serif">
-                              {language === 'ar' ? 'العصر' : 'Asr'} - 03:45 PM
+                              {t(nextPrayer.name)} - {nextPrayer.time}
                           </p>
                       </div>
                   </div>
@@ -179,11 +217,11 @@ const Home: React.FC = () => {
               
               <div className="grid grid-cols-2 md:grid-cols-6 divide-x divide-y md:divide-y-0 divide-gray-100 dark:divide-gray-700 rtl:divide-x-reverse">
                   {prayers.map((prayer, idx) => (
-                      <div key={idx} className={`p-4 text-center group transition hover:bg-gray-50 dark:hover:bg-gray-700/50 ${idx === 3 ? 'bg-islamic-primary/5 dark:bg-islamic-primary/20' : ''}`}>
-                          <div className={`mx-auto w-8 h-8 rounded-full flex items-center justify-center mb-2 ${idx === 3 ? 'text-islamic-primary dark:text-islamic-gold' : 'text-gray-400'}`}>
+                      <div key={idx} className={`p-4 text-center group transition hover:bg-gray-50 dark:hover:bg-gray-700/50 ${prayer.name === nextPrayer.name ? 'bg-islamic-primary/10 dark:bg-islamic-primary/20 ring-inset ring-2 ring-islamic-primary/20' : ''}`}>
+                          <div className={`mx-auto w-8 h-8 rounded-full flex items-center justify-center mb-2 ${prayer.name === nextPrayer.name ? 'text-islamic-primary dark:text-islamic-gold animate-pulse' : 'text-gray-400'}`}>
                               <prayer.icon className="w-5 h-5" />
                           </div>
-                          <p className={`text-sm font-bold font-serif mb-1 ${idx === 3 ? 'text-islamic-primary dark:text-islamic-gold' : 'text-gray-700 dark:text-gray-300'}`}>
+                          <p className={`text-sm font-bold font-serif mb-1 ${prayer.name === nextPrayer.name ? 'text-islamic-primary dark:text-islamic-gold' : 'text-gray-700 dark:text-gray-300'}`}>
                               {t(prayer.name)}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 font-mono" dir="ltr">
