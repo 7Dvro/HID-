@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 
 // Safely check if process is defined to prevent "ReferenceError: process is not defined" in browser environments
 // Fallback to the provided key if environment variable is not set
-const apiKey = (typeof process !== 'undefined' && process.env && process.env.API_KEY) || 'AIzaSyDmLjpOt50cMVvR9U0wL-edbKW1_ew5b7g';
+const apiKey = (typeof process !== 'undefined' && process.env && process.env.API_KEY) || '';
 
 let ai: GoogleGenAI | null = null;
 if (apiKey) {
