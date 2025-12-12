@@ -50,7 +50,7 @@ const COURSES_DATA: Course[] = [
     duration: '4h 30m',
     students: 1540,
     rating: 4.8,
-    image: 'https://picsum.photos/seed/fiqh/800/400',
+    image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     descriptionAr: 'دورة شاملة تشرح أحكام الطهارة والصلاة والزكاة والصيام بأسلوب ميسر للمبتدئين وفق المذاهب المعتمدة.',
     descriptionEn: 'A comprehensive course explaining the rules of Purification, Prayer, Zakat, and Fasting in a simplified manner.',
     modules: [
@@ -86,7 +86,7 @@ const COURSES_DATA: Course[] = [
     duration: '6h 15m',
     students: 2100,
     rating: 4.9,
-    image: 'https://picsum.photos/seed/quran/800/400',
+    image: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     descriptionAr: 'رحلة في عمق كتاب الله، نتعلم فيها أسباب النزول، المكي والمدني، وقواعد التدبر الأمثل للآيات.',
     descriptionEn: 'A journey into the depth of the Quran, learning reasons of revelation, Makki & Madani, and reflection rules.',
     modules: [
@@ -112,7 +112,7 @@ const COURSES_DATA: Course[] = [
     duration: '3h 45m',
     students: 850,
     rating: 4.7,
-    image: 'https://picsum.photos/seed/speech/800/400',
+    image: 'https://images.unsplash.com/photo-1475721027767-4d0637c8c96d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     descriptionAr: 'دورة عملية للدعاة والأئمة لتطوير مهارات التواصل، لغة الجسد، وبناء الخطبة المؤثرة.',
     descriptionEn: 'Practical course for Imams to improve communication skills, body language, and structuring impactful speeches.',
     modules: []

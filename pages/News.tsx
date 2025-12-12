@@ -12,7 +12,7 @@ const News: React.FC = () => {
       category: 'Events',
       title: language === 'ar' ? 'انطلاق مسابقة الخرطوم للقرآن الكريم' : 'Khartoum Quran Competition Launch',
       date: '2024-03-15',
-      image: 'https://picsum.photos/seed/news1/600/400',
+      image: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'أعلنت الهيئة العامة عن بدء التسجيل في الدورة العاشرة من المسابقة الكبرى لحفظ القرآن الكريم وتلاوته وتفسيره.' : 'The General Authority announced the start of registration for the 10th edition of the Grand Quran Competition.',
     },
     {
@@ -20,7 +20,7 @@ const News: React.FC = () => {
       category: 'Technology',
       title: language === 'ar' ? 'تدشين تطبيق "منبري" للأئمة' : 'Launch of "Minbari" App for Imams',
       date: '2024-03-10',
-      image: 'https://picsum.photos/seed/news2/600/400',
+      image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'تطبيق ذكي يساعد الأئمة في إعداد الخطب والتواصل مع المصلين، يحتوي على مكتبة خطب ضخمة وأدوات بحث متقدمة.' : 'A smart app helping Imams prepare Khutbahs and connect with worshipers, featuring a huge library and advanced search tools.',
     },
     {
@@ -28,7 +28,7 @@ const News: React.FC = () => {
       category: 'Training',
       title: language === 'ar' ? 'تخريج دفعة جديدة من الدعاة' : 'Graduation of New Batch of Callers',
       date: '2024-03-05',
-      image: 'https://picsum.photos/seed/news3/600/400',
+      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'احتفلت الهيئة بتخريج 500 داعية وداعية بعد إتمام البرنامج التأهيلي المكثف الذي استمر لمدة ستة أشهر.' : 'The Authority celebrated the graduation of 500 Da\'is after completing the intensive 6-month qualifying program.',
     },
     {
@@ -36,7 +36,7 @@ const News: React.FC = () => {
       category: 'Projects',
       title: language === 'ar' ? 'افتتاح مجمع النور القرآني' : 'Opening of Al-Noor Quranic Complex',
       date: '2024-02-28',
-      image: 'https://picsum.photos/seed/news4/600/400',
+      image: 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'تم بحمد الله افتتاح مجمع النور الذي يضم مسجداً وخلوة ومدرسة قرآنية ومسكناً للطلاب في ولاية الجزيرة.' : 'Al-Noor Complex was opened, comprising a mosque, khalwa, Quranic school, and student housing in Gezira State.',
     },
     {
@@ -44,7 +44,7 @@ const News: React.FC = () => {
       category: 'Events',
       title: language === 'ar' ? 'المؤتمر السنوي للأئمة والدعاة' : 'Annual Conference for Imams',
       date: '2024-02-15',
-      image: 'https://picsum.photos/seed/news5/600/400',
+      image: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       excerpt: language === 'ar' ? 'تحت شعار "نحو خطاب دعوي مؤثر"، انطلقت فعاليات المؤتمر السنوي بمشاركة واسعة من العلماء والمفكرين.' : 'Under the theme "Towards Impactful Da\'wah Discourse", the annual conference kicked off with wide participation.',
     }
   ];

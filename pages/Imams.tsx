@@ -55,21 +55,21 @@ const Imams: React.FC = () => {
 
   // Safe images for avatars and covers
   const avatarImages = [
-      'https://images.unsplash.com/photo-1590076215667-25cb4840eb19?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
       'https://images.unsplash.com/photo-1594382029377-b9c92cc2ce6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
       'https://images.unsplash.com/photo-1534579222473-b3c76b97b0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1614742790937-2938a9d68bd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1576670158466-9a29e1208940?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1584286595398-a59f21d313f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1591216109968-3e504ba415f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+      'https://images.unsplash.com/photo-1590076215667-25cb4840eb19?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1628718683647-062e74284d72?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1531384441138-2736e62e0919?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
   ];
 
   const coverImages = [
       'https://images.unsplash.com/photo-1564121211835-e88c852648ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1552423316-c70a08191e32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1542361345-89e58247f2d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   ];
 
   // Generate Mock Data
