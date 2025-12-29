@@ -9,14 +9,12 @@ const Profile: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState<'general' | 'security'>('general');
   
-  // General Form Data
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [bio, setBio] = useState(user?.bio || '');
   const [location, setLocation] = useState(user?.location || '');
   const [phone, setPhone] = useState(user?.phone || '');
 
-  // Password Form Data
   const [currentPass, setCurrentPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
@@ -28,9 +26,8 @@ const Profile: React.FC = () => {
 
   const handleSecuritySubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate password change logic
     if (newPass === confirmPass && newPass.length > 5) {
-        updateProfile({}); // Just trigger toast
+        updateProfile({}); 
         setCurrentPass('');
         setNewPass('');
         setConfirmPass('');
@@ -53,12 +50,11 @@ const Profile: React.FC = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
-           {/* Sidebar / Tabs */}
            <div className="w-full md:w-64 flex-shrink-0">
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
                   <div className="p-6 text-center border-b border-gray-50 dark:border-gray-700">
                       <div className="relative inline-block">
-                         <img src={user.avatar || "https://picsum.photos/200"} alt={user.name} className="w-24 h-24 rounded-full object-cover border-4 border-gray-100 dark:border-gray-700 mb-3" />
+                         <img src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=006B3F&color=fff&size=200`} alt={user.name} className="w-24 h-24 rounded-full object-cover border-4 border-gray-100 dark:border-gray-700 mb-3 bg-white" />
                          <button className="absolute bottom-3 end-0 bg-islamic-primary text-white p-1.5 rounded-full hover:bg-islamic-dark transition border-2 border-white dark:border-gray-800 shadow-sm">
                              <Camera className="w-4 h-4" />
                          </button>
@@ -85,7 +81,6 @@ const Profile: React.FC = () => {
               </div>
            </div>
 
-           {/* Content Area */}
            <div className="flex-1">
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 md:p-8 transition-colors duration-300">
                  

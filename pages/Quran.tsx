@@ -1,20 +1,53 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Book, Headphones, Mic, Search, Play, Pause, X, ArrowRight, ArrowLeft, Loader2, Bookmark, BookOpen, ChevronRight, ChevronLeft, Trash2, Volume2, List, Menu, CheckCircle, FileText, LayoutDashboard, PlayCircle, StopCircle, User, Settings2 } from 'lucide-react';
+import { Book, Headphones, Mic, Search, Play, Pause, X, ArrowRight, ArrowLeft, Loader2, Bookmark, BookOpen, ChevronRight, ChevronLeft, Trash2, Volume2, List, Menu, CheckCircle, FileText, LayoutDashboard, PlayCircle, StopCircle, User, Settings2, Download, Info, ScrollText, GraduationCap, MapPin, Users, School, Star, TrendingUp, Filter, ExternalLink, PenTool as Pen, ShieldCheck, Lock, LogIn, UserPlus, Activity } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 
-const VERSES_PER_PAGE = 10; // عدد الآيات في الصفحة الواحدة
+const VERSES_PER_PAGE = 10;
 
-// تعريف واجهة بيانات القارئ
 interface Reciter {
   id: string;
   nameAr: string;
   nameEn: string;
-  serverFull: string; // رابط السيرفر للسور الكاملة (MP3Quran)
-  serverVerse: string; // معرف القارئ في EveryAyah للتلاوة آية بآية
+  serverFull: string;
+  serverVerse: string;
 }
 
-// قائمة القراء المعتمدين (تضم قراء السودان)
+interface MatnChapter {
+  titleAr: string;
+  titleEn: string;
+  verses: string[];
+}
+
+interface Matn {
+  id: string;
+  titleAr: string;
+  titleEn: string;
+  authorAr: string;
+  authorEn: string;
+  categoryAr: string;
+  categoryEn: string;
+  descriptionAr: string;
+  descriptionEn: string;
+  chapters: MatnChapter[];
+  color: string;
+}
+
+interface Khalwa {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  sheikhAr: string;
+  sheikhEn: string;
+  stateAr: string;
+  stateEn: string;
+  students: number;
+  rating: number;
+  image: string;
+}
+
 const RECITERS: Reciter[] = [
   {
     id: 'sudais',
@@ -26,7 +59,7 @@ const RECITERS: Reciter[] = [
   {
     id: 'noreen',
     nameAr: 'الشيخ نورين محمد صديق (رحمه الله)',
-    nameEn: 'Sheikh Noreen Muhammad Siddiq',
+    nameEn: 'Sheikh نورين Muhammad Siddiq',
     serverFull: 'https://server9.mp3quran.net/nourain/',
     serverVerse: 'Noreen_Muhammad_Siddiq_128kbps'
   },
@@ -60,42 +93,85 @@ const RECITERS: Reciter[] = [
   }
 ];
 
+const MUTOON_DATA: Matn[] = [
+  {
+    id: 'tuhfa',
+    titleAr: 'تحفة الأطفال والغلمان',
+    titleEn: 'Tuhfat Al-Atfal',
+    authorAr: 'الشيخ سليمان الجمزوري',
+    authorEn: 'Sheikh Sulayman Al-Jamzuri',
+    categoryAr: 'تجويد',
+    categoryEn: 'Tajweed',
+    color: 'from-emerald-500 to-teal-700',
+    descriptionAr: 'منظومة شعرية في علم التجويد، للمبتدئين، تتناول أحكام النون الساكنة والميم والمدود.',
+    descriptionEn: 'A poetic system in the science of Tajweed for beginners, covering the rulings of Noon Sakina, Meem, and Madd.',
+    chapters: [
+      {
+        titleAr: 'المقدمة',
+        titleEn: 'Introduction',
+        verses: [
+          'يَقُولُ رَاجِي رَحْمَةِ الْغَفُورِ ... دَوْمًا سُلَيْمَانُ هُوَ الْجَمْزُورِي',
+          'الْحَمْدُ لِلَّهِ مُصَلِّيًا عَلَى ... مُحَمَّدٍ وَآلِهِ وَمَنْ تَلَا',
+          'وَبَعْدُ: هَذَا النُّونُ لِلْمُرِيدِ ... فِي النُّونِ وَالتَّنْوِينِ وَالْمُدُودِ',
+          'سَمَّيْتُهُ بِتُحْفَةِ الْأَطْفَالِ ... عَنْ شَيْخِنَا الْمِيهِيِّ ذِي الْكَمَالِ',
+          'أَرْجُو بِهِ أَنْ يَنْفَعَ الطُّلَّابَا ... وَالْأَجْرَ وَالْقَبُولَ وَالثَّوَابَا'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'jazari',
+    titleAr: 'المقدمة الجزرية',
+    titleEn: 'Al-Muqaddimah Al-Jazariyyah',
+    authorAr: 'الإمام ابن الجزري',
+    authorEn: 'Imam Ibn Al-Jazari',
+    categoryAr: 'تجويد وقراءات',
+    categoryEn: 'Tajweed & Qira\'at',
+    color: 'from-blue-600 to-indigo-800',
+    descriptionAr: 'العمدة في علم التجويد، شرح فيها مخارج الحروف وصفاتها وأحكام التلاوة بدقة وعمق.',
+    descriptionEn: 'The definitive text in Tajweed, detailing letter articulations, attributes, and recitation rules.',
+    chapters: []
+  }
+];
+
+const KHALWA_DATA: Khalwa[] = [
+  { id: 1, nameAr: 'خلوة ولاية الخرطوم النموذجية', nameEn: 'Khartoum State Model Khalwa', sheikhAr: 'الشيخ الفاتح قريب الله', sheikhEn: 'Sheikh Al-Fatih', stateAr: 'الخرطوم', stateEn: 'Khartoum', students: 850, rating: 4.9, image: 'https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 2, nameAr: 'خلوة ولاية كسلا الكبرى', nameEn: 'Kassala State Grand Khalwa', sheikhAr: 'الشيخ علي بيتاي', sheikhEn: 'Sheikh Ali Betai', stateAr: 'كسلا', stateEn: 'Kassala', students: 3500, rating: 5.0, image: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 3, nameAr: 'خلوة ولاية الجزيرة العريقة', nameEn: 'Gezira State Ancient Khalwa', sheikhAr: 'الشيخ محمد الفادني', sheikhEn: 'Sheikh Wad Al-Fadni', stateAr: 'الجزيرة', stateEn: 'Gezira', students: 1200, rating: 4.8, image: 'https://images.unsplash.com/photo-1552423316-c70a08191e32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 4, nameAr: 'خلوة ولاية نهر النيل التاريخية', nameEn: 'River Nile State Historic Khalwa', sheikhAr: 'الشيخ حاج حمد الجعلي', sheikhEn: 'Sheikh Al-Jaali', stateAr: 'نهر النيل', stateEn: 'River Nile', students: 950, rating: 4.7, image: 'https://images.unsplash.com/photo-1511629091441-ee46146481b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+];
+
 const Quran: React.FC = () => {
   const { t, language } = useLanguage();
   const { showToast } = useToast();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'mushaf' | 'audio' | 'mutoon' | 'khalwa'>('mushaf');
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Reciter State
-  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[0]); // Default to Sudais
+  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[0]);
   const [isReciterMenuOpen, setIsReciterMenuOpen] = useState(false);
-
-  // Audio State
   const [currentSurah, setCurrentSurah] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
-
-  // Reading & Playback State
   const [readingSurah, setReadingSurah] = useState<any | null>(null);
   const [surahVerses, setSurahVerses] = useState<any[]>([]);
   const [isLoadingText, setIsLoadingText] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-  
-  // Follow-along State
-  const [activeVerseIndex, setActiveVerseIndex] = useState<number | null>(null); // Index in surahVerses array
-  
-  // Pagination State
+  const [activeVerseIndex, setActiveVerseIndex] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  // Bookmark State
   const [savedBookmark, setSavedBookmark] = useState<{surah: number, ayah: number, page: number} | null>(null);
-
-  // Tafsir State
   const [selectedAyahForTafsir, setSelectedAyahForTafsir] = useState<any | null>(null);
   const [tafsirData, setTafsirData] = useState<string>('');
   const [isLoadingTafsir, setIsLoadingTafsir] = useState(false);
 
-  // Load bookmark on mount
+  // Mutoon States
+  const [selectedMatn, setSelectedMatn] = useState<Matn | null>(null);
+  const [activeMatnChapter, setActiveMatnChapter] = useState<number>(0);
+
+  // Khalwa States
+  const [khalwaFilter, setKhalwaFilter] = useState('All');
+  const [isPortalOpen, setIsPortalOpen] = useState(false);
+  const [portalMode, setPortalMode] = useState<'login' | 'register'>('login');
+
   useEffect(() => {
     const saved = localStorage.getItem('quran_bookmark');
     if (saved) {
@@ -103,7 +179,6 @@ const Quran: React.FC = () => {
     }
   }, []);
 
-  // Cleanup audio when component unmounts
   useEffect(() => {
     return () => {
       if (audioRef) {
@@ -113,25 +188,19 @@ const Quran: React.FC = () => {
     };
   }, []);
 
-  // Helper to pad numbers for URLs (e.g., 1 -> "001")
   const padNum = (num: number) => num.toString().padStart(3, '0');
 
-  // Sync Logic: Watch for activeVerseIndex changes to play audio and handle pagination
   useEffect(() => {
     if (activeVerseIndex === null || !readingSurah || surahVerses.length === 0) return;
 
-    // 1. Ensure we are on the correct page
     const targetPage = Math.ceil((activeVerseIndex + 1) / VERSES_PER_PAGE);
     if (targetPage !== currentPage) {
         setCurrentPage(targetPage);
     }
 
-    // 2. Play Audio
     if (audioRef) audioRef.pause();
     
     const ayah = surahVerses[activeVerseIndex];
-    
-    // Construct Verse URL using EveryAyah format: identifier/SurahAyah.mp3 (e.g., 001001.mp3)
     const surahStr = padNum(readingSurah.number);
     const ayahStr = padNum(ayah.numberInSurah);
     const url = `https://everyayah.com/data/${selectedReciter.serverVerse}/${surahStr}${ayahStr}.mp3`;
@@ -140,7 +209,6 @@ const Quran: React.FC = () => {
     setAudioRef(audio);
     
     audio.play().catch(e => {
-        console.error("Audio playback failed", e);
         setIsPlaying(false);
         setActiveVerseIndex(null);
         showToast(language === 'ar' ? 'خطأ في تحميل التلاوة' : 'Error loading audio', 'error');
@@ -148,37 +216,29 @@ const Quran: React.FC = () => {
 
     setIsPlaying(true);
 
-    // 3. Setup Next Verse Trigger
     audio.onended = () => {
         if (activeVerseIndex < surahVerses.length - 1) {
             setActiveVerseIndex(prev => prev! + 1);
         } else {
-            // End of Surah
             setActiveVerseIndex(null);
             setIsPlaying(false);
-            showToast(language === 'ar' ? 'تمت السورة' : 'Surah Completed', 'success');
         }
     };
 
-  }, [activeVerseIndex, selectedReciter]); // Added selectedReciter dependency
+  }, [activeVerseIndex, selectedReciter, readingSurah, surahVerses, language, showToast, currentPage]);
 
   const tabs = [
-    { id: 'mushaf', label: language === 'ar' ? 'المصحف التفاعلي' : 'Interactive Mushaf', icon: Book },
-    { id: 'audio', label: language === 'ar' ? 'التلاوات' : 'Recitations', icon: Headphones },
-    { id: 'mutoon', label: language === 'ar' ? 'مكتبة المتون' : 'Mutoon Library', icon: FileText },
-    { id: 'khalwa', label: language === 'ar' ? 'إدارة الخلاوي' : 'Khalwa Mgmt', icon: LayoutDashboard },
+    { id: 'mushaf', label: language === 'ar' ? 'المصحف' : 'Mushaf', icon: Book },
+    { id: 'audio', label: language === 'ar' ? 'التلاوات' : 'Audio', icon: Headphones },
+    { id: 'mutoon', label: language === 'ar' ? 'المتون' : 'Mutoon', icon: FileText },
+    { id: 'khalwa', label: language === 'ar' ? 'الخلاوي' : 'Khalwa', icon: LayoutDashboard },
   ];
 
-  const surahs = Array.from({ length: 114 }, (_, i) => {
-      const namesAr = ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم'];
-      const namesEn = ['Al-Fatiha', 'Al-Baqarah', 'Ali Imran', 'An-Nisa', 'Al-Ma\'idah', 'Al-An\'am', 'Al-A\'raf', 'Al-Anfal', 'At-Tawbah', 'Yunus', 'Hud', 'Yusuf', 'Ar-Ra\'d', 'Ibrahim', 'Al-Hijr', 'An-Nahl', 'Al-Isra', 'Al-Kahf', 'Maryam', 'Ta-Ha', 'Al-Anbiya', 'Al-Hajj', 'Al-Mu\'minun', 'An-Nur', 'Al-Furqan', 'Ash-Shu\'ara', 'An-Naml', 'Al-Qasas', 'Al-Ankabut', 'Ar-Rum'];
-      return {
-        number: i + 1,
-        nameAr: namesAr[i] || `سورة ${i + 1}`,
-        nameEn: namesEn[i] || `Surah ${i + 1}`,
-        verses: Math.floor(Math.random() * 200) + 7, 
-      };
-  });
+  const surahs = useMemo(() => Array.from({ length: 114 }, (_, i) => {
+      const namesAr = ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات', 'النبأ', 'النازعات', 'عبس', 'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس'];
+      const namesEn = ['Al-Fatiha', 'Al-Baqarah', 'Ali Imran', 'An-Nisa', 'Al-Ma\'idah', 'Al-An\'am', 'Al-A\'raf', 'Al-Anfal', 'At-Tawbah', 'Yunus', 'Hud', 'Yusuf', 'Ar-Ra\'d', 'Ibrahim', 'Al-Hijr', 'An-Nahl', 'Al-Isra', 'Al-Kahf', 'Maryam', 'Ta-Ha', 'Al-Anbiya', 'Al-Hajj', 'Al-Mu\'minun', 'An-Nur', 'Al-Furqan', 'Ash-Shu\'ara', 'An-Naml', 'Al-Qasas', 'Al-Ankabut', 'Ar-Rum', 'Luqman', 'As-Sajda', 'Al-Ahzab', 'Saba', 'Fatir', 'Ya-Sin', 'As-Saffat', 'Sad', 'Az-Zumar', 'Ghafir', 'Fussilat', 'Ash-Shura', 'Az-Zukhruf', 'Ad-Dukhan', 'Al-Jathiya', 'Al-Ahqaf', 'Muhammad', 'Al-Fath', 'Al-Hujurat', 'Qaf', 'Adh-Dhariyat', 'At-Tur', 'An-Najm', 'Al-Qamar', 'Ar-Rahman', 'Al-Waqi\'a', 'Al-Hadid', 'Al-Mujadila', 'Al-Hashr', 'Al-Mumtahina', 'As-Saff', 'Al-Jumu\'a', 'Al-Munafiqun', 'At-Taghabun', 'At-Talaq', 'At-Tahrim', 'Al-Mulk', 'Al-Qalam', 'Al-Haqqa', 'Al-Ma\'arij', 'Nuh', 'Al-Jinn', 'Al-Muzzammil', 'Al-Muddathir', 'Al-Qiyama', 'Al-Insan', 'Al-Mursalat', 'An-Naba', 'An-Nazi\'at', 'Abasa', 'At-Takwir', 'Al-Infitar', 'Al-Mutaffifin', 'Al-Inshiqaq', 'Al-Buruj', 'At-Tariq', 'Al-A\'la', 'Al-Ghashiya', 'Al-Fajr', 'Al-Balad', 'Ash-Shams', 'Al-Layl', 'Ad-Duha', 'Ash-Sharh', 'At-Tin', 'Al-Alaq', 'Al-Qadr', 'Al-Bayyina', 'Az-Zalzala', 'Al-Adiyat', 'Al-Qari\'a', 'At-Takathur', 'Al-Asr', 'Al-Humaza', 'Al-Fil', 'Quraysh', 'Al-Ma\'un', 'Al-Kawthar', 'Al-Kafirun', 'An-Nasr', 'Al-Masad', 'Al-Ikhlas', 'Al-Falaq', 'An-Nas'];
+      return { number: i + 1, nameAr: namesAr[i], nameEn: namesEn[i], verses: 0 };
+  }), []);
 
   const filteredSurahs = useMemo(() => {
     return surahs.filter(s => 
@@ -188,60 +248,18 @@ const Quran: React.FC = () => {
     );
   }, [searchQuery, surahs]);
 
-  const toggleFullSurahPlay = (surah: typeof surahs[0]) => {
-    // Construct Full Surah URL
-    const surahStr = padNum(surah.number);
-    const fullAudioUrl = `${selectedReciter.serverFull}${surahStr}.mp3`;
-
-    if (currentSurah === surah.number) {
-      if (isPlaying) {
-        audioRef?.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef?.play();
-        setIsPlaying(true);
-      }
-    } else {
-      if (audioRef) {
-        audioRef.pause();
-      }
-      const newAudio = new Audio(fullAudioUrl);
-      newAudio.play().catch(e => {
-          showToast(language === 'ar' ? 'لا يمكن تشغيل الصوت حالياً' : 'Cannot play audio right now', 'error');
-          console.error(e);
-      });
-      newAudio.onended = () => setIsPlaying(false);
-      setAudioRef(newAudio);
-      setCurrentSurah(surah.number);
-      setIsPlaying(true);
-      showToast(language === 'ar' ? `جاري تشغيل: ${surah.nameAr} - ${selectedReciter.nameAr}` : `Playing: ${surah.nameEn} - ${selectedReciter.nameEn}`, 'success');
-    }
-  };
-
-  const handleOpenSurah = async (surah: typeof surahs[0]) => {
+  const handleOpenSurah = async (surah: any) => {
     setReadingSurah(surah);
     setIsLoadingText(true);
     setSurahVerses([]);
     setIsSideMenuOpen(false);
     setActiveVerseIndex(null);
-    
-    // Check if we have a bookmark for this surah to open appropriate page
-    if (savedBookmark && savedBookmark.surah === surah.number) {
-        setCurrentPage(savedBookmark.page);
-    } else {
-        setCurrentPage(1);
-    }
-
+    setCurrentPage(savedBookmark?.surah === surah.number ? savedBookmark.page : 1);
     try {
         const response = await fetch(`https://api.alquran.cloud/v1/surah/${surah.number}`);
         const data = await response.json();
-        if (data.code === 200) {
-            setSurahVerses(data.data.ayahs);
-        } else {
-            showToast(language === 'ar' ? 'حدث خطأ في جلب الآيات' : 'Error fetching verses', 'error');
-        }
+        if (data.code === 200) setSurahVerses(data.data.ayahs);
     } catch (error) {
-        console.error("Failed to fetch surah", error);
         showToast(language === 'ar' ? 'تأكد من اتصال الإنترنت' : 'Check internet connection', 'error');
     } finally {
         setIsLoadingText(false);
@@ -252,694 +270,386 @@ const Quran: React.FC = () => {
       setReadingSurah(null);
       setSurahVerses([]);
       setActiveVerseIndex(null);
-      window.scrollTo(0, 0);
-      if (audioRef) {
-        audioRef.pause();
-        setIsPlaying(false);
-      }
+      if (audioRef) { audioRef.pause(); setIsPlaying(false); }
   };
 
-  // Pagination Logic
-  const totalPages = Math.ceil(surahVerses.length / VERSES_PER_PAGE);
-  const currentVerses = useMemo(() => {
-      const start = (currentPage - 1) * VERSES_PER_PAGE;
-      return surahVerses.slice(start, start + VERSES_PER_PAGE);
-  }, [surahVerses, currentPage]);
-
-  const handlePageChange = (direction: 'next' | 'prev') => {
-      if (direction === 'next' && currentPage < totalPages) {
-          setCurrentPage(prev => prev + 1);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (direction === 'prev' && currentPage > 1) {
-          setCurrentPage(prev => prev - 1);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+  const handleOpenMatn = (matn: Matn) => {
+      setSelectedMatn(matn);
+      setActiveMatnChapter(0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Follow-along Player Control
-  const toggleFollowAlong = () => {
-      if (activeVerseIndex !== null && isPlaying) {
-          // Stop
-          if (audioRef) audioRef.pause();
-          setIsPlaying(false);
-          setActiveVerseIndex(null);
-      } else {
-          // Start from first verse on current page
-          const start = (currentPage - 1) * VERSES_PER_PAGE;
-          setActiveVerseIndex(start);
-      }
-  };
+  const filteredKhalwas = useMemo(() => {
+      return khalwaFilter === 'All' ? KHALWA_DATA : KHALWA_DATA.filter(k => k.stateEn === khalwaFilter);
+  }, [khalwaFilter]);
 
-  // Bookmark Logic
-  const handleBookmark = (ayahNumber: number) => {
-      if (!readingSurah) return;
-      const bookmarkData = { surah: readingSurah.number, ayah: ayahNumber, page: currentPage };
-      setSavedBookmark(bookmarkData);
-      localStorage.setItem('quran_bookmark', JSON.stringify(bookmarkData));
-      showToast(language === 'ar' ? 'تم حفظ موضع القراءة' : 'Bookmark saved', 'success');
-  };
-
-  const handleRemoveBookmark = () => {
-    setSavedBookmark(null);
-    localStorage.removeItem('quran_bookmark');
-    showToast(language === 'ar' ? 'تم حذف العلامة' : 'Bookmark removed', 'info');
-  };
-
-  // Only plays single ayah without auto-continue (for manual interaction)
-  const handlePlaySingleAyah = (ayah: any) => {
-    if (audioRef) {
-        audioRef.pause();
-        setIsPlaying(false);
-        setActiveVerseIndex(null); // Stop auto follow-along
-    }
-    
-    // Construct Verse URL
-    const surahStr = padNum(readingSurah.number);
-    const ayahStr = padNum(ayah.numberInSurah);
-    const url = `https://everyayah.com/data/${selectedReciter.serverVerse}/${surahStr}${ayahStr}.mp3`;
-    
-    const audio = new Audio(url);
-    audio.play();
-  };
-
-  // Tafsir Logic
-  const handleOpenTafsir = async (ayah: any) => {
-      setSelectedAyahForTafsir(ayah);
-      setIsLoadingTafsir(true);
-      setTafsirData('');
-      
-      try {
-          const response = await fetch(`https://api.alquran.cloud/v1/ayah/${readingSurah.number}:${ayah.numberInSurah}/ar.muyassar`);
-          const data = await response.json();
-          if (data.code === 200) {
-              setTafsirData(data.data.text);
-          } else {
-              setTafsirData(language === 'ar' ? 'نعتذر، التفسير غير متوفر حالياً.' : 'Tafsir unavailable.');
-          }
-      } catch (error) {
-          setTafsirData(language === 'ar' ? 'حدث خطأ في جلب التفسير.' : 'Error loading Tafsir.');
-      } finally {
-          setIsLoadingTafsir(false);
-      }
+  const handleOpenPortal = (mode: 'login' | 'register' = 'login') => {
+      setPortalMode(mode);
+      setIsPortalOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header (Hide when reading) */}
-        {!readingSurah && (
-            <header className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-islamic-dark dark:text-islamic-gold mb-4 font-serif">{t('quran')}</h1>
-            
-            {savedBookmark && (
-                 <button 
-                    onClick={() => {
-                        const surah = surahs.find(s => s.number === savedBookmark.surah);
-                        if (surah) handleOpenSurah(surah);
-                    }}
-                    className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-islamic-light dark:bg-gray-700 text-islamic-primary dark:text-islamic-gold rounded-full text-sm font-medium hover:bg-islamic-primary hover:text-white transition shadow-sm border border-islamic-primary/20 dark:border-gray-600"
-                 >
-                    <Bookmark className="w-4 h-4 fill-current" />
-                    {language === 'ar' 
-                        ? `أكمل القراءة من: ${surahs[savedBookmark.surah-1]?.nameAr || ''} - آية ${savedBookmark.ayah}` 
-                        : `Continue Reading: Surah ${savedBookmark.surah} - Ayah ${savedBookmark.ayah}`}
-                 </button>
-            )}
-
-            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                {language === 'ar' 
-                ? 'المنصة الشاملة للحفظة: مصحف تفاعلي، مكتبة متون، وإدارة الخلاوي.' 
-                : 'Comprehensive platform for Huffaz: Interactive Mushaf, Mutoon Library, and Khalwa Management.'}
-            </p>
+        {!readingSurah && !selectedMatn && (
+            <header className="mb-6 sm:mb-10 text-center animate-in fade-in">
+                <h1 className="text-2xl sm:text-4xl font-bold text-islamic-dark dark:text-islamic-gold mb-3 sm:mb-4 font-serif">{t('quran')}</h1>
+                <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-sm sm:text-base px-4">
+                    {language === 'ar' ? 'المنصة الشاملة لشؤون القرآن: مصحف تفاعلي، تلاوات، ومتابعة الخلاوي.' : 'The comprehensive platform for Quranic affairs: Interactive Mushaf, Recitations, and Khalwa management.'}
+                </p>
             </header>
         )}
 
-        {/* Tabs (Hide when reading) */}
-        {!readingSurah && (
-            <div className="flex justify-center mb-8 overflow-x-auto pb-2">
-            <div className="bg-white dark:bg-gray-800 rounded-full p-1 shadow-sm inline-flex whitespace-nowrap">
-                {tabs.map((tab) => (
-                <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                    activeTab === tab.id
-                        ? 'bg-islamic-primary text-white shadow-md'
-                        : 'text-gray-600 dark:text-gray-300 hover:text-islamic-primary dark:hover:text-islamic-gold'
-                    }`}
-                >
-                    <tab.icon className="w-4 h-4" />
-                    {tab.label}
-                </button>
-                ))}
-            </div>
+        {!readingSurah && !selectedMatn && (
+            <div className="flex justify-center mb-6 sm:mb-10">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-full p-1.5 shadow-sm grid grid-cols-2 sm:flex gap-1 w-full max-w-lg transition-colors border border-gray-100 dark:border-gray-700">
+                    {tabs.map((tab) => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id as any)}
+                        className={`flex items-center justify-center gap-2 px-3 sm:px-6 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all ${
+                        activeTab === tab.id
+                            ? 'bg-islamic-primary text-white shadow-lg shadow-islamic-primary/20'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-islamic-primary dark:hover:text-islamic-gold hover:bg-islamic-primary/5'
+                        }`}
+                    >
+                        <tab.icon className="w-4 h-4" />
+                        {tab.label}
+                    </button>
+                    ))}
+                </div>
             </div>
         )}
 
-        {/* Content */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 min-h-[500px] relative transition-colors duration-300">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-islamic p-4 sm:p-8 min-h-[500px] relative transition-all border border-gray-100 dark:border-gray-700">
           
-          {/* Main Views */}
-          {!readingSurah ? (
+          {!readingSurah && !selectedMatn ? (
               <>
                 {(activeTab === 'mushaf' || activeTab === 'audio') && (
-                    <div className="relative max-w-md mx-auto mb-8">
-                        <input 
-                        type="text" 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder={language === 'ar' ? 'ابحث عن سورة (بالاسم أو الرقم)...' : 'Search for a Surah (Name or No)...'}
-                        className="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none text-start transition-all"
-                        />
-                        <Search className="absolute start-3 top-3.5 text-gray-400 w-5 h-5" />
-                        {searchQuery && (
-                            <button 
-                                onClick={() => setSearchQuery('')}
-                                className="absolute end-3 top-3.5 text-gray-400 hover:text-red-500"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                        )}
+                    <div className="relative max-w-xl mx-auto mb-8 sm:mb-12">
+                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={language === 'ar' ? 'بحث عن سورة...' : 'Search for a Surah...'} className="w-full pl-10 pr-10 py-3 sm:py-4 rounded-2xl border-2 border-gray-50 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white focus:border-islamic-primary focus:bg-white dark:focus:bg-gray-700 outline-none transition-all shadow-sm" />
+                        <Search className={`absolute ${language === 'ar' ? 'right-4' : 'left-4'} top-3.5 sm:top-4.5 text-gray-400 w-5 h-5`} />
                     </div>
                 )}
 
                 {activeTab === 'mushaf' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-in fade-in">
                         {filteredSurahs.map((surah) => (
-                        <div 
-                            key={surah.number} 
-                            onClick={() => handleOpenSurah(surah)}
-                            className="border border-gray-100 dark:border-gray-700 p-4 rounded-lg hover:border-islamic-gold hover:shadow-md transition cursor-pointer flex items-center justify-between group animate-in fade-in duration-300"
-                        >
-                            <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-islamic-light dark:bg-gray-700 text-islamic-primary dark:text-islamic-gold rounded-full flex items-center justify-center font-bold text-sm group-hover:bg-islamic-primary group-hover:text-white transition">
-                                {surah.number}
+                            <div key={surah.number} onClick={() => handleOpenSurah(surah)} className="p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-islamic-gold hover:shadow-xl transition-all cursor-pointer flex items-center justify-between group bg-gray-50/30 dark:bg-gray-700/20 active:scale-[0.98]">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-700 text-islamic-primary dark:text-islamic-gold rounded-xl flex items-center justify-center font-bold text-sm shadow-sm group-hover:bg-islamic-primary group-hover:text-white transition-colors">{surah.number}</div>
+                                    <h3 className="font-bold text-gray-900 dark:text-white font-serif text-lg sm:text-xl">{surah.nameAr}</h3>
+                                </div>
+                                <ChevronRight className="w-5 h-5 text-islamic-primary dark:text-islamic-gold opacity-0 group-hover:opacity-100 transition-all" />
                             </div>
-                            <div>
-                                <h3 className="font-bold text-gray-900 dark:text-white font-serif text-lg">{surah.nameAr}</h3>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{surah.nameEn}</p>
-                            </div>
-                            </div>
-                            <div className="flex items-center text-islamic-primary dark:text-islamic-gold opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="text-xs font-bold">{language === 'ar' ? 'اقرأ' : 'Read'}</span>
-                                {language === 'ar' ? <ArrowLeft className="w-4 h-4 mr-1" /> : <ArrowRight className="w-4 h-4 ml-1" />}
-                            </div>
-                        </div>
                         ))}
-                        {filteredSurahs.length === 0 && (
-                            <div className="col-span-full text-center py-12 text-gray-500">
-                                {language === 'ar' ? 'لا توجد نتائج' : 'No results found'}
-                            </div>
-                        )}
                     </div>
                 )}
 
-                {activeTab === 'audio' && (
-                    <div>
-                        <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-                            <h3 className="text-xl font-bold text-gray-700 dark:text-gray-200">{language === 'ar' ? 'المكتبة الصوتية' : 'Audio Library'}</h3>
-                            
-                            {/* Reciter Selector */}
-                            <div className="relative">
-                                <button 
-                                    onClick={() => setIsReciterMenuOpen(!isReciterMenuOpen)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                >
-                                    <User className="w-4 h-4" />
-                                    <span>{language === 'ar' ? selectedReciter.nameAr : selectedReciter.nameEn}</span>
-                                    <Settings2 className="w-4 h-4 text-gray-400" />
-                                </button>
-                                
-                                {isReciterMenuOpen && (
-                                    <>
-                                        <div className="fixed inset-0 z-10" onClick={() => setIsReciterMenuOpen(false)}></div>
-                                        <div className="absolute top-full mt-2 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 z-20 overflow-hidden animate-in fade-in slide-in-from-top-2">
-                                            <div className="p-2 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                                                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 px-2">{language === 'ar' ? 'اختر القارئ' : 'Select Reciter'}</span>
-                                            </div>
-                                            <div className="max-h-64 overflow-y-auto">
-                                                {RECITERS.map(reciter => (
-                                                    <button
-                                                        key={reciter.id}
-                                                        onClick={() => {
-                                                            setSelectedReciter(reciter);
-                                                            setIsReciterMenuOpen(false);
-                                                            // Stop current playback if reciter changes
-                                                            if (isPlaying) {
-                                                                audioRef?.pause();
-                                                                setIsPlaying(false);
-                                                            }
-                                                        }}
-                                                        className={`w-full text-start px-4 py-3 text-sm flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                                                            selectedReciter.id === reciter.id 
-                                                            ? 'bg-islamic-light dark:bg-gray-700/50 text-islamic-primary dark:text-islamic-gold font-bold' 
-                                                            : 'text-gray-700 dark:text-gray-200'
-                                                        }`}
-                                                    >
-                                                        <span>{language === 'ar' ? reciter.nameAr : reciter.nameEn}</span>
-                                                        {selectedReciter.id === reciter.id && <CheckCircle className="w-4 h-4" />}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-
-                        {isPlaying && (
-                            <div className="mb-4 bg-islamic-primary text-white p-3 rounded-lg flex items-center justify-between animate-in fade-in">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-white/20 rounded-full animate-pulse">
-                                        <Headphones className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <span className="text-xs opacity-80 block">{language === 'ar' ? 'جاري الاستماع للقارئ' : 'Listening to'}</span>
-                                        <span className="font-bold text-sm">{language === 'ar' ? selectedReciter.nameAr : selectedReciter.nameEn}</span>
-                                    </div>
-                                </div>
-                                <button onClick={() => { audioRef?.pause(); setIsPlaying(false); }} className="hover:bg-white/20 p-1 rounded-full">
-                                    <StopCircle className="w-5 h-5" />
-                                </button>
-                            </div>
-                        )}
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredSurahs.map((surah) => (
-                                <div 
-                                    key={surah.number} 
-                                    className={`border p-4 rounded-lg transition flex items-center justify-between group ${
-                                        currentSurah === surah.number ? 'border-islamic-primary bg-islamic-light dark:bg-gray-700' : 'border-gray-100 dark:border-gray-700 hover:border-gray-300'
-                                    }`}
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <button 
-                                            onClick={() => toggleFullSurahPlay(surah)}
-                                            className={`w-10 h-10 rounded-full flex items-center justify-center transition ${
-                                                currentSurah === surah.number && isPlaying 
-                                                    ? 'bg-islamic-primary text-white' 
-                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 group-hover:bg-islamic-gold group-hover:text-white'
-                                            }`}
-                                        >
-                                            {currentSurah === surah.number && isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ms-0.5" />}
-                                        </button>
-                                        <div>
-                                            <h3 className={`font-bold font-serif text-lg ${currentSurah === surah.number ? 'text-islamic-primary dark:text-islamic-gold' : 'text-gray-900 dark:text-white'}`}>{surah.nameAr}</h3>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">{surah.nameEn}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Mutoon Library Section */}
-                {activeTab === 'mutoon' && (
-                    <div className="space-y-6 animate-in fade-in">
-                        <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl text-center">
-                            <BookOpen className="w-12 h-12 text-islamic-gold mx-auto mb-3" />
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{language === 'ar' ? 'مكتبة المتون العلمية' : 'Scientific Mutoon Library'}</h2>
-                            <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-                                {language === 'ar' 
-                                ? 'متون التجويد والقراءات (كالشاطبية، الجزرية) بصيغة رقمية قابلة للبحث والتحميل.' 
-                                : 'Tajweed and Qira\'at texts (like Shatibiyyah, Jazariyyah) in searchable digital format.'}
-                            </p>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-5 rounded-xl hover:shadow-lg transition cursor-pointer">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center font-serif font-bold text-lg">
-                                            {i}
-                                        </div>
-                                        <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-gray-500 dark:text-gray-400">{language === 'ar' ? 'تجويد' : 'Tajweed'}</span>
-                                    </div>
-                                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">{language === 'ar' ? 'متن الجزرية' : 'Matn Al-Jazariyyah'}</h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{language === 'ar' ? 'الإمام ابن الجزري' : 'Imam Ibn Al-Jazari'}</p>
-                                    <button className="w-full py-2 border border-islamic-primary dark:border-islamic-gold text-islamic-primary dark:text-islamic-gold rounded-lg text-sm font-bold hover:bg-islamic-primary hover:text-white transition">
-                                        {language === 'ar' ? 'تصفح المتن' : 'Read Matn'}
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Khalwa Management Section */}
                 {activeTab === 'khalwa' && (
-                    <div className="space-y-6 animate-in fade-in">
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                             <div className="bg-green-50 dark:bg-green-900/10 p-8 rounded-2xl">
-                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{language === 'ar' ? 'إدارة شؤون الخلوة' : 'Khalwa Affairs Mgmt'}</h2>
-                                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                                     {language === 'ar' 
-                                     ? 'نظام متكامل لإدارة الطلاب، الموارد المالية، ومتابعة الحفظ والتسميع.' 
-                                     : 'Integrated system for managing students, financial resources, and tracking memorization.'}
-                                 </p>
-                                 <button className="bg-islamic-primary text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-islamic-dark transition">
-                                     {language === 'ar' ? 'دخول نظام الإدارة' : 'Access System'}
+                    <div className="animate-in fade-in space-y-10">
+                         {/* Khalwa Stats Dashboard */}
+                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                             {[
+                                 { icon: School, label: language === 'ar' ? 'خلوة مسجلة' : 'Reg. Khalwas', value: '450+', color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+                                 { icon: Users, label: language === 'ar' ? 'طالب علم' : 'Total Students', value: '12,500', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+                                 { icon: User, label: language === 'ar' ? 'شيخ محفظ' : 'Active Sheikhs', value: '620', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+                                 { icon: TrendingUp, label: language === 'ar' ? 'نسبة الإنجاز' : 'Completion Rate', value: '94%', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+                             ].map((stat, i) => (
+                                 <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm text-center group hover:shadow-md transition-all">
+                                     <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+                                         <stat.icon className="w-6 h-6" />
+                                     </div>
+                                     <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{stat.value}</h4>
+                                     <p className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">{stat.label}</p>
+                                 </div>
+                             ))}
+                         </div>
+
+                         {/* Methodology & Systems */}
+                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                             <div className="lg:col-span-2 space-y-6">
+                                 <div className="flex items-center justify-between px-2">
+                                     <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                         <MapPin className="w-5 h-5 text-islamic-gold" />
+                                         {language === 'ar' ? 'دليل الخلاوي حسب الولايات' : 'Khalwas Directory'}
+                                     </h3>
+                                     <div className="flex gap-2">
+                                         {['All', 'Khartoum', 'Kassala', 'Gezira'].map(state => (
+                                             <button key={state} onClick={() => setKhalwaFilter(state)} className={`px-4 py-1.5 rounded-full text-[10px] font-bold transition-all ${khalwaFilter === state ? 'bg-islamic-primary text-white shadow-md' : 'bg-gray-100 dark:bg-gray-700 text-gray-400 hover:bg-gray-200'}`}>
+                                                 {state}
+                                             </button>
+                                         ))}
+                                     </div>
+                                 </div>
+                                 
+                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                     {filteredKhalwas.map((khalwa) => (
+                                         <div key={khalwa.id} className="bg-gray-50/50 dark:bg-gray-700/30 rounded-[2.5rem] p-6 border border-gray-100 dark:border-gray-700 flex items-center gap-5 hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer group active:scale-[0.98] shadow-sm">
+                                             <div className="w-20 h-20 rounded-3xl overflow-hidden flex-shrink-0 shadow-md">
+                                                 <img src={khalwa.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={khalwa.nameEn} />
+                                             </div>
+                                             <div className="flex-1 min-w-0">
+                                                 <h4 className="font-bold text-gray-900 dark:text-white text-md truncate">{language === 'ar' ? khalwa.nameAr : khalwa.nameEn}</h4>
+                                                 <p className="text-xs text-islamic-primary dark:text-islamic-gold font-bold mt-1 flex items-center gap-1">
+                                                     <User className="w-3 h-3" /> {language === 'ar' ? khalwa.sheikhAr : khalwa.sheikhEn}
+                                                 </p>
+                                                 <div className="flex items-center justify-between mt-4">
+                                                     <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1">
+                                                         <Users className="w-3 h-3" /> {khalwa.students} {language === 'ar' ? 'طالب' : 'Students'}
+                                                     </span>
+                                                     <div className="flex items-center gap-0.5 text-amber-400 text-[10px] font-bold">
+                                                         <Star className="w-3 h-3 fill-current" /> {khalwa.rating}
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     ))}
+                                 </div>
+                             </div>
+
+                             <div className="space-y-6">
+                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white px-2 flex items-center gap-2">
+                                     <Pen className="w-5 h-5 text-islamic-gold" />
+                                     {language === 'ar' ? 'أنظمة التلقين والحفظ' : 'Learning Systems'}
+                                 </h3>
+                                 <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden divide-y dark:divide-gray-700">
+                                     {[
+                                         { id: 1, title: 'طريقة اللوح التقليدية', titleEn: 'Traditional Loh Method', desc: 'نظام الكتابة على الألواح الخشبية وغسلها.', icon: ScrollText },
+                                         { id: 2, title: 'نظام الحصون الخمسة', titleEn: 'Five Fortresses', desc: 'خطة مراجعة وحفظ يومية متكاملة.', icon: ShieldCheck },
+                                         { id: 3, title: 'تأهيل الشيوخ والمحفظين', titleEn: 'Sheikh Qualification', desc: 'برنامج تربوي لضبط مهارات المحفظين.', icon: GraduationCap },
+                                     ].map((sys) => (
+                                         <div key={sys.id} onClick={() => handleOpenPortal('login')} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer group">
+                                             <div className="flex gap-4">
+                                                 <div className="w-12 h-12 bg-islamic-primary/5 dark:bg-gray-700 text-islamic-primary dark:text-islamic-gold rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-islamic-primary group-hover:text-white transition-all">
+                                                     <sys.icon className="w-6 h-6" />
+                                                 </div>
+                                                 <div>
+                                                     <h4 className="font-bold text-sm text-gray-900 dark:text-white mb-1">{language === 'ar' ? sys.title : sys.titleEn}</h4>
+                                                     <p className="text-xs text-gray-400 font-light leading-relaxed">{sys.desc}</p>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     ))}
+                                 </div>
+
+                                 <button onClick={() => handleOpenPortal('login')} className="w-full bg-islamic-gold text-white p-5 rounded-[2rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-islamic-gold/20 flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all">
+                                     <LayoutDashboard className="w-5 h-5" />
+                                     {language === 'ar' ? 'دخول بوابة الإدارة' : 'Admin Portal Access'}
                                  </button>
                              </div>
-                             
-                             <div className="space-y-4">
-                                 <h3 className="font-bold text-gray-900 dark:text-white">{language === 'ar' ? 'منهجيات الحفظ والمراجعة' : 'Memorization Methodologies'}</h3>
-                                 {[1, 2, 3].map(i => (
-                                     <div key={i} className="flex items-center gap-4 p-4 bg-white dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
-                                         <PlayCircle className="w-8 h-8 text-gray-400" />
-                                         <div>
-                                             <h4 className="font-bold text-sm text-gray-900 dark:text-white">{language === 'ar' ? 'طريقة الحصون الخمسة' : 'The Five Fortresses Method'}</h4>
-                                             <p className="text-xs text-gray-500 dark:text-gray-400">Video • 20 min</p>
-                                         </div>
+                         </div>
+
+                         {/* Resource Section */}
+                         <div className="bg-islamic-dark rounded-[3rem] p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl">
+                             <div className="absolute inset-0 arabesque-pattern opacity-10"></div>
+                             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                                 <div className="max-w-xl">
+                                     <span className="text-islamic-gold font-bold text-[10px] uppercase tracking-[0.3em] mb-4 block">{language === 'ar' ? 'المكتبة المنهجية' : 'Methodology Library'}</span>
+                                     <h3 className="text-3xl font-bold font-serif mb-4">{language === 'ar' ? 'دليل مناهج الخلاوي السودانية' : 'Sudanese Khalwa Curriculum'}</h3>
+                                     <p className="text-islamic-light/80 text-sm leading-relaxed mb-6">
+                                         {language === 'ar' ? 'تحميل الحقيبة التدريبية الموحدة لطلاب الخلاوي والمحفظين، تشمل علوم القرآن، التجويد، والسيرة.' : 'Download the unified training package for Khalwa students and tutors, covering Quranic sciences, Tajweed, and Sira.'}
+                                     </p>
+                                     <div className="flex flex-wrap gap-4">
+                                         <button onClick={() => handleOpenPortal('login')} className="bg-white text-islamic-dark px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-islamic-gold hover:text-white transition-all shadow-lg shadow-black/20">
+                                             <Download className="w-4 h-4" /> {language === 'ar' ? 'تحميل المنهج' : 'Download PDF'}
+                                         </button>
+                                         <button onClick={() => handleOpenPortal('login')} className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-white/20 transition-all">
+                                             <PlayCircle className="w-4 h-4" /> {language === 'ar' ? 'مشاهدة الشرح' : 'Video Tutorial'}
+                                         </button>
                                      </div>
-                                 ))}
+                                 </div>
+                                 <div className="w-full md:w-64 h-64 bg-white/5 rounded-[2.5rem] border border-white/10 flex items-center justify-center p-8">
+                                     <ScrollText className="w-32 h-32 text-islamic-gold opacity-50" />
+                                 </div>
                              </div>
                          </div>
                     </div>
                 )}
+
+                {activeTab === 'audio' && (
+                    <div className="animate-in fade-in">
+                        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-10 gap-4">
+                            <h3 className="text-xl font-bold text-islamic-dark dark:text-white">{language === 'ar' ? 'المكتبة الصوتية' : 'Audio Library'}</h3>
+                            <button onClick={() => setIsReciterMenuOpen(!isReciterMenuOpen)} className="w-full sm:w-auto flex items-center justify-between gap-3 px-5 py-2.5 bg-gray-50 dark:bg-gray-700 rounded-xl text-sm font-bold border border-gray-100 dark:border-gray-600">
+                                <User className="w-4 h-4 text-islamic-primary" />
+                                <span>{language === 'ar' ? selectedReciter.nameAr : selectedReciter.nameEn}</span>
+                                <Settings2 className="w-4 h-4 text-gray-400" />
+                            </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {filteredSurahs.map((surah) => (
+                                <div key={surah.number} className="p-4 rounded-2xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all flex items-center gap-4 group">
+                                    <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-white dark:bg-gray-700 text-gray-500 group-hover:bg-islamic-gold group-hover:text-white shadow-sm transition-all"><Play className="w-5 h-5 ms-0.5" /></button>
+                                    <div>
+                                        <h3 className="font-bold font-serif text-lg text-gray-800 dark:text-white">{surah.nameAr}</h3>
+                                        <p className="text-[10px] text-gray-400 uppercase">{surah.nameEn}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'mutoon' && (
+                    <div className="space-y-10 animate-in fade-in">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {MUTOON_DATA.map((matn) => (
+                                <div key={matn.id} className="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all flex flex-col sm:flex-row overflow-hidden group">
+                                    <div className={`sm:w-1/3 bg-gradient-to-br ${matn.color} p-8 flex flex-col justify-between text-white relative`}>
+                                        <div className="absolute inset-0 arabesque-pattern opacity-10"></div>
+                                        <h3 className="text-2xl font-bold font-serif relative z-10">{matn.titleAr}</h3>
+                                        <p className="text-xs opacity-80 relative z-10 flex items-center gap-2"><User className="w-3 h-3" /> {language === 'ar' ? matn.authorAr : matn.authorEn}</p>
+                                    </div>
+                                    <div className="flex-1 p-8 flex flex-col justify-between">
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-3">{language === 'ar' ? matn.descriptionAr : matn.descriptionEn}</p>
+                                        <button onClick={() => handleOpenMatn(matn)} className="w-full py-3.5 bg-islamic-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-islamic-dark shadow-lg shadow-islamic-primary/20 flex items-center justify-center gap-2">
+                                            <BookOpen className="w-4 h-4" /> {language === 'ar' ? 'قراءة المتن' : 'Open Text'}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
               </>
-          ) : (
-              /* Reader View */
-              <div className="animate-in fade-in slide-in-from-bottom-5 duration-500 pb-20">
-                  {/* Sticky Top Bar */}
-                  <div className="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4 sticky top-0 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm z-10 pt-2 shadow-sm px-4 -mx-6">
+          ) : readingSurah ? (
+              <div className="animate-in fade-in slide-in-from-bottom-5 duration-500 pb-20 -mx-4 sm:mx-0">
+                  <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 border-b dark:border-gray-700 pb-4 sticky top-[-1rem] bg-white/95 dark:bg-gray-800/95 backdrop-blur-md z-40 pt-2 px-4">
                       <div className="flex items-center gap-2">
-                        <button 
-                            onClick={closeReader}
-                            className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-islamic-primary dark:hover:text-islamic-gold transition font-medium"
-                        >
-                            {language === 'ar' ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
-                        </button>
-                        <button
-                            onClick={() => setIsSideMenuOpen(true)}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-islamic-light dark:hover:bg-gray-600 hover:text-islamic-primary transition"
-                        >
-                            <List className="w-4 h-4" />
-                            <span className="text-sm font-bold">{language === 'ar' ? 'الفهرس' : 'Index'}</span>
-                        </button>
+                          <button onClick={closeReader} className="p-2 sm:p-3 bg-gray-100 dark:bg-gray-700 hover:bg-red-50 text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-xl transition-all"><X className="w-5 h-5" /></button>
+                          <button onClick={() => setIsSideMenuOpen(true)} className="flex items-center gap-2 px-4 py-2.5 bg-islamic-primary/5 dark:bg-gray-700 text-islamic-primary dark:text-islamic-gold rounded-xl hover:bg-islamic-primary hover:text-white transition-all font-bold text-sm shadow-sm"><List className="w-4 h-4" /> <span className="hidden xs:inline">{language === 'ar' ? 'الفهرس' : 'Index'}</span></button>
                       </div>
-                      
-                      <div className="flex items-center gap-2">
-                            {/* Reciter Selector in Reader Mode */}
-                            <div className="relative hidden md:block">
-                                <button 
-                                    onClick={() => setIsReciterMenuOpen(!isReciterMenuOpen)}
-                                    className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                >
-                                    <User className="w-3 h-3" />
-                                    <span className="max-w-[100px] truncate">{language === 'ar' ? selectedReciter.nameAr : selectedReciter.nameEn}</span>
-                                    <ChevronRight className="w-3 h-3 rotate-90" />
-                                </button>
-                                
-                                {isReciterMenuOpen && (
-                                    <>
-                                        <div className="fixed inset-0 z-10" onClick={() => setIsReciterMenuOpen(false)}></div>
-                                        <div className="absolute top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 z-20 overflow-hidden animate-in fade-in slide-in-from-top-2">
-                                            <div className="max-h-56 overflow-y-auto">
-                                                {RECITERS.map(reciter => (
-                                                    <button
-                                                        key={reciter.id}
-                                                        onClick={() => {
-                                                            setSelectedReciter(reciter);
-                                                            setIsReciterMenuOpen(false);
-                                                            // Stop current playback to avoid mismatch
-                                                            if (activeVerseIndex !== null && isPlaying) {
-                                                                if (audioRef) audioRef.pause();
-                                                                setIsPlaying(false);
-                                                                setActiveVerseIndex(null);
-                                                            }
-                                                        }}
-                                                        className={`w-full text-start px-4 py-2 text-xs flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                                                            selectedReciter.id === reciter.id 
-                                                            ? 'bg-islamic-light dark:bg-gray-700/50 text-islamic-primary dark:text-islamic-gold font-bold' 
-                                                            : 'text-gray-700 dark:text-gray-200'
-                                                        }`}
-                                                    >
-                                                        <span>{language === 'ar' ? reciter.nameAr : reciter.nameEn}</span>
-                                                        {selectedReciter.id === reciter.id && <CheckCircle className="w-3 h-3" />}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-
-                          <button
-                            onClick={toggleFollowAlong}
-                            className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition shadow-sm ${
-                                activeVerseIndex !== null && isPlaying
-                                ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200' 
-                                : 'bg-islamic-primary text-white hover:bg-islamic-dark'
-                            }`}
-                          >
-                             {activeVerseIndex !== null && isPlaying ? <StopCircle className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
-                             {activeVerseIndex !== null && isPlaying 
-                                ? (language === 'ar' ? 'إيقاف' : 'Stop')
-                                : (language === 'ar' ? 'استماع' : 'Listen')
-                             }
-                          </button>
-                      </div>
-
-                      <div className="hidden md:block w-8"></div>
+                      <div className="text-2xl sm:text-4xl font-serif text-islamic-dark dark:text-islamic-gold font-bold">{readingSurah.nameAr}</div>
                   </div>
-
-                  {/* Loading State */}
                   {isLoadingText ? (
-                      <div className="flex flex-col items-center justify-center py-20">
-                          <Loader2 className="w-10 h-10 text-islamic-primary animate-spin mb-4" />
-                          <p className="text-gray-500">{language === 'ar' ? 'جاري تحميل الآيات...' : 'Loading Verses...'}</p>
+                      <div className="flex flex-col items-center justify-center py-32 animate-in fade-in">
+                          <Loader2 className="w-12 h-12 text-islamic-primary animate-spin mb-4" />
+                          <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">{language === 'ar' ? 'جاري تحميل كلام الله...' : 'Loading Verses...'}</p>
                       </div>
                   ) : (
-                      /* Quran Text Area */
-                      <div className="max-w-3xl mx-auto text-center px-2" dir="rtl">
-                          
-                          <div className="mb-4 text-center">
-                              <h2 className="text-2xl font-bold font-serif text-islamic-dark dark:text-islamic-gold inline-block border-b-2 border-islamic-gold/30 pb-1 px-4">{readingSurah.nameAr}</h2>
-                              <p className="text-xs text-gray-400 mt-1 md:hidden">
-                                {language === 'ar' ? `القارئ: ${selectedReciter.nameAr}` : `Reciter: ${selectedReciter.nameEn}`}
-                              </p>
-                          </div>
-
-                          {/* Basmalah (Only if not Surah 1 and not Surah 9, and only on Page 1) */}
-                          {currentPage === 1 && readingSurah.number !== 1 && readingSurah.number !== 9 && (
-                              <div className="mb-8 mt-2 font-serif text-2xl text-islamic-dark dark:text-gray-300 opacity-90">
-                                  بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-                              </div>
-                          )}
-
-                          <div className="font-serif text-3xl md:text-4xl leading-[2.5] md:leading-[2.5] text-gray-800 dark:text-gray-200 text-justify" style={{ textAlignLast: 'center' }}>
-                                {currentVerses.map((ayah, index) => {
-                                    // Clean Basmalah if it exists in text
-                                    let text = ayah.text;
-                                    if (readingSurah.number !== 1 && currentPage === 1 && index === 0 && text.startsWith('بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ')) {
-                                        text = text.replace('بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ', '').trim();
-                                    }
-
-                                    const isBookmarked = savedBookmark?.surah === readingSurah.number && savedBookmark?.ayah === ayah.numberInSurah;
-                                    
-                                    // Calculate global index in the full Surah array for sync logic
-                                    const globalIndex = ((currentPage - 1) * VERSES_PER_PAGE) + index;
-                                    const isActive = activeVerseIndex === globalIndex;
-
-                                    return (
-                                        <span key={ayah.number} className="inline group relative transition-colors duration-500">
-                                            <span 
-                                                className={`cursor-pointer rounded px-1 transition duration-300 
-                                                    ${isActive 
-                                                        ? 'bg-islamic-gold/20 text-islamic-primary dark:text-islamic-gold shadow-sm ring-2 ring-islamic-gold/30' 
-                                                        : 'hover:bg-islamic-light/30 dark:hover:bg-gray-700/50 hover:text-islamic-dark dark:hover:text-white'}
-                                                    ${isBookmarked ? 'bg-yellow-100 dark:bg-yellow-900/30' : ''}
-                                                `}
-                                                onClick={() => setSelectedAyahForTafsir(null)} 
-                                            >
-                                                {text}
-                                            </span>
-                                            
-                                            {/* Ayah End Symbol with Interactive Menu Trigger */}
-                                            <span className="inline-flex items-center justify-center w-10 h-10 mx-1 align-middle relative group-hover:scale-110 transition-transform cursor-pointer" 
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                  }}>
-                                                <span className={`w-8 h-8 border border-islamic-gold rounded-full flex items-center justify-center text-sm text-islamic-gold number-symbol ${isBookmarked ? 'bg-islamic-gold text-white' : ''} ${isActive ? 'bg-islamic-primary text-white border-islamic-primary animate-pulse' : ''}`}>
-                                                   {ayah.numberInSurah}
-                                                </span>
-                                                
-                                                {/* Hover Menu for Ayah Actions */}
-                                                <div className="absolute bottom-full mb-2 hidden group-hover:flex bg-white dark:bg-gray-700 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-600 z-20 text-xs w-max flex-col sm:flex-row">
-                                                    <button 
-                                                        onClick={(e) => { e.stopPropagation(); handlePlaySingleAyah(ayah); }}
-                                                        className="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center gap-2 text-gray-700 dark:text-gray-200 border-b sm:border-b-0 sm:border-l border-gray-100 dark:border-gray-600"
-                                                        title={language === 'ar' ? 'استماع للآية فقط' : 'Play Verse Only'}
-                                                    >
-                                                        <Volume2 className="w-4 h-4 text-islamic-primary dark:text-islamic-gold" />
-                                                        {language === 'ar' ? 'استماع' : 'Play'}
-                                                    </button>
-                                                    <button 
-                                                        onClick={(e) => { e.stopPropagation(); handleOpenTafsir(ayah); }}
-                                                        className="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center gap-2 text-gray-700 dark:text-gray-200 border-b sm:border-b-0 sm:border-l border-gray-100 dark:border-gray-600"
-                                                        title={language === 'ar' ? 'تفسير الآية' : 'Tafsir'}
-                                                    >
-                                                        <BookOpen className="w-4 h-4" />
-                                                        {language === 'ar' ? 'تفسير' : 'Tafsir'}
-                                                    </button>
-                                                    {isBookmarked ? (
-                                                        <button 
-                                                            onClick={(e) => { e.stopPropagation(); handleRemoveBookmark(); }}
-                                                            className="px-3 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 text-red-600"
-                                                            title={language === 'ar' ? 'حذف الوقف' : 'Remove Bookmark'}
-                                                        >
-                                                            <Trash2 className="w-4 h-4" />
-                                                            {language === 'ar' ? 'حذف' : 'Remove'}
-                                                        </button>
-                                                    ) : (
-                                                        <button 
-                                                            onClick={(e) => { e.stopPropagation(); handleBookmark(ayah.numberInSurah); }}
-                                                            className="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center gap-2 text-gray-700 dark:text-gray-200"
-                                                            title={language === 'ar' ? 'حفظ علامة وقف' : 'Bookmark'}
-                                                        >
-                                                            <Bookmark className="w-4 h-4" />
-                                                            {language === 'ar' ? 'وقف' : 'Bookmark'}
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </span>
-                                        </span>
-                                    );
-                                })}
-                          </div>
-
-                          {/* Pagination Controls */}
-                          <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100 dark:border-gray-700">
-                                <button 
-                                    onClick={() => handlePageChange('prev')}
-                                    disabled={currentPage === 1}
-                                    className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold transition ${
-                                        currentPage === 1 
-                                        ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' 
-                                        : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-islamic-primary hover:text-islamic-primary shadow-sm'
-                                    }`}
-                                >
-                                    {language === 'ar' ? <ArrowRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-                                    {language === 'ar' ? 'الصفحة السابقة' : 'Previous'}
-                                </button>
-
-                                <span className="text-gray-400 font-serif">
-                                    {currentPage} / {totalPages}
-                                </span>
-
-                                <button 
-                                    onClick={() => handlePageChange('next')}
-                                    disabled={currentPage === totalPages}
-                                    className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold transition ${
-                                        currentPage === totalPages
-                                        ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' 
-                                        : 'bg-islamic-primary text-white hover:bg-islamic-dark shadow-md'
-                                    }`}
-                                >
-                                    {language === 'ar' ? 'الصفحة التالية' : 'Next'}
-                                    {language === 'ar' ? <ArrowLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-                                </button>
-                          </div>
-                          
-                          {currentPage === totalPages && (
-                             <div className="mt-8 text-xl font-serif text-gray-500">
-                                - صدق الله العظيم -
-                             </div>
-                          )}
-                      </div>
-                  )}
-
-                  {/* Sidebar Index Menu */}
-                  {isSideMenuOpen && (
-                      <div className="fixed inset-0 z-50 flex">
-                          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsSideMenuOpen(false)}></div>
-                          <div className={`relative w-72 bg-white dark:bg-gray-800 h-full shadow-2xl flex flex-col animate-in ${language === 'ar' ? 'slide-in-from-right' : 'slide-in-from-left'} duration-300`}>
-                              <div className="p-4 border-b dark:border-gray-700 flex items-center justify-between bg-islamic-light/50 dark:bg-gray-700/50">
-                                  <h3 className="font-bold text-lg text-islamic-dark dark:text-white">{language === 'ar' ? 'فهرس السور' : 'Surah Index'}</h3>
-                                  <button onClick={() => setIsSideMenuOpen(false)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full dark:text-gray-300">
-                                      <X className="w-5 h-5" />
-                                  </button>
-                              </div>
-                              <div className="overflow-y-auto flex-1 p-2 space-y-1">
-                                  {surahs.map((surah) => (
-                                      <button
-                                          key={surah.number}
-                                          onClick={() => handleOpenSurah(surah)}
-                                          className={`w-full text-start px-4 py-3 rounded-lg flex items-center justify-between transition ${
-                                              readingSurah.number === surah.number 
-                                              ? 'bg-islamic-primary text-white font-bold' 
-                                              : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
-                                          }`}
-                                      >
-                                          <div className="flex items-center gap-3">
-                                              <span className={`text-xs w-6 h-6 rounded-full border flex items-center justify-center ${
-                                                  readingSurah.number === surah.number ? 'border-white/50' : 'border-gray-300 dark:border-gray-600'
-                                              }`}>
-                                                  {surah.number}
-                                              </span>
-                                              <span className="font-serif text-lg">{surah.nameAr}</span>
-                                          </div>
-                                          {readingSurah.number === surah.number && <CheckCircle className="w-4 h-4" />}
-                                      </button>
-                                  ))}
-                              </div>
+                      <div className="max-w-3xl mx-auto px-2 sm:px-4" dir="rtl">
+                          <div className="font-serif text-3xl sm:text-5xl leading-[2.8] sm:leading-[3] text-gray-800 dark:text-gray-200 text-center">
+                                {surahVerses.map((ayah) => (
+                                    <span key={ayah.number} className="inline relative">
+                                        <span className="cursor-pointer rounded-2xl px-2 py-1 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-all">{ayah.text}</span>
+                                        <span className="inline-flex items-center justify-center w-10 h-10 mx-2 align-middle border border-islamic-gold rounded-full text-xs font-bold text-islamic-gold">{ayah.numberInSurah}</span>
+                                    </span>
+                                ))}
                           </div>
                       </div>
                   )}
               </div>
+          ) : (
+              <div className="animate-in fade-in slide-in-from-bottom-5 duration-500 pb-20">
+                  <div className="flex flex-col lg:flex-row gap-10">
+                      <aside className="lg:w-80 flex-shrink-0 space-y-6">
+                         <button onClick={() => setSelectedMatn(null)} className="flex items-center gap-3 text-gray-500 hover:text-islamic-primary transition font-black uppercase tracking-widest text-[10px]"><ArrowRight className="w-4 h-4" /> {language === 'ar' ? 'العودة للمكتبة' : 'Back to Library'}</button>
+                         <div className={`p-8 rounded-[2rem] bg-gradient-to-br ${selectedMatn.color} text-white shadow-xl relative overflow-hidden`}><div className="absolute inset-0 arabesque-pattern opacity-10"></div><h2 className="text-2xl font-bold font-serif mb-2 relative z-10">{selectedMatn.titleAr}</h2></div>
+                         <div className="bg-gray-50 dark:bg-gray-700/30 rounded-[2rem] p-4 border border-gray-100 dark:border-gray-700">
+                             <h4 className="px-4 py-2 text-[10px] font-black uppercase text-gray-400 tracking-widest border-b dark:border-gray-600 mb-2">{language === 'ar' ? 'الفصول' : 'Chapters'}</h4>
+                             {selectedMatn.chapters.length > 0 ? selectedMatn.chapters.map((chap, idx) => (
+                                 <button key={idx} onClick={() => setActiveMatnChapter(idx)} className={`w-full text-start px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-between group ${activeMatnChapter === idx ? 'bg-islamic-primary text-white shadow-lg' : 'text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700'}`}><span>{chap.titleAr}</span>{activeMatnChapter === idx && <CheckCircle className="w-4 h-4" />}</button>
+                             )) : <p className="p-4 text-xs text-gray-400 italic">{language === 'ar' ? 'المحتوى قيد التحديث...' : 'Content being updated...'}</p>}
+                         </div>
+                      </aside>
+                      <main className="flex-1 bg-white dark:bg-gray-800 rounded-[3rem] p-8 sm:p-12 border border-gray-50 dark:border-gray-700 shadow-sm">
+                          {selectedMatn.chapters[activeMatnChapter] ? (
+                              <div dir="rtl">
+                                  <div className="text-center mb-16"><h3 className="text-3xl sm:text-4xl font-bold font-serif text-islamic-dark dark:text-islamic-gold inline-block border-b-2 border-islamic-gold/20 pb-4">{selectedMatn.chapters[activeMatnChapter].titleAr}</h3></div>
+                                  <div className="space-y-10 max-w-2xl mx-auto">
+                                      {selectedMatn.chapters[activeMatnChapter].verses.map((verse, vIdx) => {
+                                          const parts = verse.split('...');
+                                          return (
+                                              <div key={vIdx} className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-justify group">
+                                                  <div className="flex-1 text-2xl sm:text-3xl font-serif text-gray-800 dark:text-gray-200 leading-loose group-hover:text-islamic-primary transition-colors">{parts[0]}</div>
+                                                  <div className="w-10 h-10 rounded-full border border-gray-100 dark:border-gray-600 flex items-center justify-center text-xs font-bold text-gray-400 bg-gray-50 dark:bg-gray-700 shadow-inner">{vIdx + 1}</div>
+                                                  <div className="flex-1 text-2xl sm:text-3xl font-serif text-gray-800 dark:text-gray-200 leading-loose text-end group-hover:text-islamic-primary transition-colors">{parts[1]}</div>
+                                              </div>
+                                          );
+                                      })}
+                                  </div>
+                              </div>
+                          ) : <div className="flex flex-col items-center justify-center h-full py-20 text-center"><Info className="w-16 h-16 text-gray-100 dark:text-gray-700 mb-6" /><h3 className="text-xl font-bold text-gray-300 dark:text-gray-600">{language === 'ar' ? 'المحتوى غير متوفر حالياً' : 'Content is not available yet'}</h3></div>}
+                      </main>
+                  </div>
+              </div>
           )}
 
-          {/* Tafsir Modal */}
-          {selectedAyahForTafsir && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[80vh] transition-colors">
-                      <div className="bg-islamic-primary p-4 flex justify-between items-center text-white">
-                          <h3 className="font-bold font-serif text-lg">
-                              {language === 'ar' 
-                               ? `تفسير الآية ${selectedAyahForTafsir.numberInSurah} من ${readingSurah.nameAr}` 
-                               : `Tafsir Ayah ${selectedAyahForTafsir.numberInSurah} of ${readingSurah.nameEn}`}
-                          </h3>
-                          <button onClick={() => setSelectedAyahForTafsir(null)} className="hover:bg-white/20 p-1 rounded-full transition">
-                              <X className="w-5 h-5" />
-                          </button>
-                      </div>
-                      
-                      <div className="p-6 overflow-y-auto" dir="rtl">
-                          <div className="mb-6 p-4 bg-islamic-light/30 dark:bg-gray-700/50 rounded-lg border border-islamic-primary/10 dark:border-gray-600">
-                              <p className="font-serif text-2xl text-center leading-loose text-gray-800 dark:text-gray-200">
-                                  {selectedAyahForTafsir.text}
-                              </p>
-                          </div>
-                          
-                          <div className="prose max-w-none">
-                             <h4 className="font-bold text-islamic-primary dark:text-islamic-gold mb-2 text-lg">{language === 'ar' ? 'التفسير الميسر:' : 'Interpretation:'}</h4>
-                             {isLoadingTafsir ? (
-                                 <div className="flex justify-center py-8">
-                                     <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-                                 </div>
-                             ) : (
-                                 <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed text-justify">
-                                     {tafsirData}
-                                 </p>
-                             )}
-                          </div>
-                      </div>
-                      
-                      <div className="p-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex justify-end">
-                          <button 
-                            onClick={() => setSelectedAyahForTafsir(null)}
-                            className="px-6 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 font-bold"
-                          >
-                              {language === 'ar' ? 'إغلاق' : 'Close'}
-                          </button>
+          {isSideMenuOpen && (
+              <div className="fixed inset-0 z-[100] flex">
+                  <div className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in" onClick={() => setIsSideMenuOpen(false)}></div>
+                  <div className={`relative w-80 max-w-[85%] bg-white dark:bg-gray-800 h-full shadow-5xl flex flex-col animate-in ${language === 'ar' ? 'slide-in-from-right' : 'slide-in-from-left'} duration-500`}>
+                      <div className="p-6 border-b dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-700/30"><h3 className="font-bold text-xl text-islamic-dark dark:text-white font-serif">{language === 'ar' ? 'فهرس السور' : 'Surah Index'}</h3><button onClick={() => setIsSideMenuOpen(false)} className="p-2.5 bg-white dark:bg-gray-600 rounded-xl shadow-sm text-gray-400 hover:text-red-500 transition-colors"><X className="w-5 h-5" /></button></div>
+                      <div className="overflow-y-auto flex-1 p-4 space-y-2 custom-scrollbar">
+                          {surahs.map((surah) => (
+                              <button key={surah.number} onClick={() => handleOpenSurah(surah)} className={`w-full text-start px-5 py-4 rounded-2xl flex items-center justify-between transition-all group ${readingSurah?.number === surah.number ? 'bg-islamic-primary text-white shadow-lg shadow-islamic-primary/20' : 'hover:bg-gray-100 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300'}`}><div className="flex items-center gap-4"><span className={`text-[10px] font-black w-8 h-8 rounded-lg border flex items-center justify-center transition-colors ${readingSurah?.number === surah.number ? 'border-white/50 bg-white/10' : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800'}`}>{surah.number}</span><span className="font-serif text-lg">{surah.nameAr}</span></div>{readingSurah?.number === surah.number && <div className="w-2 h-2 bg-islamic-gold rounded-full animate-pulse"></div>}</button>
+                          ))}
                       </div>
                   </div>
               </div>
           )}
 
+          {/* Khalwa Portal Modal */}
+          {isPortalOpen && (
+              <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-islamic-dark/60 backdrop-blur-xl animate-in fade-in duration-300">
+                  <div className="bg-white dark:bg-gray-900 rounded-[3rem] shadow-5xl w-full max-w-lg overflow-hidden flex flex-col relative border border-white/20">
+                      <button onClick={() => setIsPortalOpen(false)} className="absolute top-6 end-6 p-2 text-gray-400 hover:text-red-500 transition-colors z-20"><X className="w-6 h-6" /></button>
+                      
+                      <div className="bg-islamic-primary p-10 text-center text-white relative">
+                          <div className="absolute inset-0 arabesque-pattern opacity-10"></div>
+                          <div className="relative z-10">
+                              <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/20">
+                                  <School className="w-10 h-10 text-islamic-gold" />
+                              </div>
+                              <h2 className="text-3xl font-bold font-serif mb-2">{language === 'ar' ? 'بوابة إدارة الخلاوي' : 'Khalwa Admin Portal'}</h2>
+                              <p className="text-islamic-light/80 text-sm">{language === 'ar' ? 'النظام الإلكتروني الموحد لشؤون التحفيظ' : 'Unified E-System for Quranic Affairs'}</p>
+                          </div>
+                      </div>
+
+                      <div className="p-10">
+                          <div className="flex gap-4 mb-8 bg-gray-50 dark:bg-gray-800 p-1.5 rounded-2xl border border-gray-100 dark:border-gray-700">
+                              <button onClick={() => setPortalMode('login')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${portalMode === 'login' ? 'bg-white dark:bg-gray-700 text-islamic-primary shadow-sm' : 'text-gray-400'}`}>
+                                  <LogIn className="w-4 h-4" />
+                                  {language === 'ar' ? 'تسجيل الدخول' : 'Login'}
+                              </button>
+                              <button onClick={() => setPortalMode('register')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${portalMode === 'register' ? 'bg-white dark:bg-gray-700 text-islamic-primary shadow-sm' : 'text-gray-400'}`}>
+                                  <UserPlus className="w-4 h-4" />
+                                  {language === 'ar' ? 'تسجيل جديد' : 'Register'}
+                              </button>
+                          </div>
+
+                          <form onSubmit={(e) => { e.preventDefault(); showToast(language === 'ar' ? 'البوابة قيد التحديث' : 'Portal is being updated', 'info'); setIsPortalOpen(false); }} className="space-y-5">
+                              {portalMode === 'register' && (
+                                  <div className="relative">
+                                      <input type="text" placeholder={language === 'ar' ? 'اسم الخلوة' : 'Khalwa Name'} className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl outline-none focus:border-islamic-gold transition text-sm dark:text-white" required />
+                                  </div>
+                              )}
+                              <div className="relative">
+                                  <input type="email" placeholder={language === 'ar' ? 'البريد الإلكتروني' : 'Email Address'} className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl outline-none focus:border-islamic-gold transition text-sm dark:text-white" required />
+                              </div>
+                              <div className="relative">
+                                  <input type="password" placeholder={language === 'ar' ? 'كلمة المرور' : 'Password'} className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl outline-none focus:border-islamic-gold transition text-sm dark:text-white" required />
+                              </div>
+                              
+                              <button type="submit" className="w-full bg-islamic-primary text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-islamic-primary/20 hover:bg-islamic-dark transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3">
+                                  {portalMode === 'login' ? (language === 'ar' ? 'دخول النظام' : 'Access Portal') : (language === 'ar' ? 'إنشاء حساب جديد' : 'Create Account')}
+                              </button>
+                          </form>
+
+                          <div className="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700 text-center">
+                              <p className="text-xs text-gray-400 mb-4">{language === 'ar' ? 'دعم فني متاح 24/7 لمسؤولي الخلاوي' : '24/7 technical support for Khalwa administrators'}</p>
+                              <div className="flex justify-center gap-6 text-gray-300">
+                                  <Lock className="w-4 h-4" />
+                                  <ShieldCheck className="w-4 h-4" />
+                                  <Activity className="w-4 h-4" />
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          )}
         </div>
       </div>
     </div>

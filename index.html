@@ -18,25 +18,38 @@
                 primary: '#006B3F',
                 dark: '#004B2D',
                 gold: '#D4AF37',
-                light: '#F3F8F5'
+                light: '#F8FBF9'
               }
             },
             fontFamily: {
               sans: ['Cairo', 'sans-serif'],
               serif: ['Amiri', 'serif'],
             },
+            borderRadius: {
+              '4xl': '2rem',
+              '5xl': '3rem',
+            },
+            boxShadow: {
+              'islamic': '0 10px 40px -10px rgba(0, 107, 63, 0.2)',
+              'gold': '0 10px 40px -10px rgba(212, 175, 55, 0.3)',
+            },
             animation: {
-              'fade-up': 'fadeUp 0.8s ease-out forwards',
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'fade-up': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'fade-in': 'fadeIn 0.6s ease-out forwards',
+              'float': 'float 6s ease-in-out infinite',
             },
             keyframes: {
               fadeUp: {
-                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '0%': { opacity: '0', transform: 'translateY(30px)' },
                 '100%': { opacity: '1', transform: 'translateY(0)' },
               },
               fadeIn: {
                 '0%': { opacity: '0' },
                 '100%': { opacity: '1' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
               }
             }
           }
@@ -45,43 +58,37 @@
     </script>
     <style>
       body {
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition: background-color 0.5s ease, color 0.5s ease;
+        scroll-behavior: smooth;
       }
-      /* Dark mode base styles applied via JS class 'dark' */
       .dark body {
-        background-color: #111827; /* gray-900 */
-        color: #f3f4f6; /* gray-100 */
+        background-color: #0d1117;
+        color: #e6edf3;
       }
-      /* Custom scrollbar for better aesthetics */
       ::-webkit-scrollbar {
-        width: 8px;
+        width: 10px;
       }
       ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
+        background: #f8fafc; 
       }
       .dark ::-webkit-scrollbar-track {
-        background: #1f2937; /* gray-800 */
+        background: #0d1117;
       }
       ::-webkit-scrollbar-thumb {
-        background: #006B3F; 
-        border-radius: 4px;
+        background: linear-gradient(to bottom, #006B3F, #004B2D); 
+        border-radius: 20px;
+        border: 2px solid transparent;
+        background-clip: content-box;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #004B2D; 
+        background: #D4AF37; 
       }
       
-      /* Explicit Keyframes definition for non-Tailwind usage in manual classes */
-      @keyframes fadeUp {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-
       .animate-on-scroll {
-        opacity: 0; /* Default hidden */
-        animation: fadeUp 0.8s ease-out forwards; /* Run animation immediately */
+        opacity: 0;
+        animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
       
-      /* Ensure content is visible if animation fails or reduced motion is on */
       @media (prefers-reduced-motion: reduce) {
         .animate-on-scroll {
           opacity: 1;
@@ -90,9 +97,20 @@
         }
       }
 
-      .delay-100 { animation-delay: 0.1s; }
-      .delay-200 { animation-delay: 0.2s; }
-      .delay-300 { animation-delay: 0.3s; }
+      .arabesque-pattern {
+        background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .dark .glass-card {
+        background: rgba(13, 17, 23, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
     </style>
   <script type="importmap">
 {

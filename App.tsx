@@ -23,7 +23,7 @@ const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen font-sans text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow pt-24 lg:pt-32">
         <Outlet />
       </main>
       <Footer />

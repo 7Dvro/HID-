@@ -1,20 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Safely check if process is defined to prevent "ReferenceError: process is not defined" in browser environments
-// Fallback to the provided key if environment variable is not set
-const apiKey = (typeof process !== 'undefined' && process.env && process.env.API_KEY) || 'AIzaSyDmLjpOt50cMVvR9U0wL-edbKW1_ew5b7g';
-
-let ai: GoogleGenAI | null = null;
-if (apiKey) {
-  ai = new GoogleGenAI({ apiKey });
-}
-
+// Standardizing the AI service to follow the latest @google/genai guidelines.
+// The API key is obtained exclusively from process.env.API_KEY.
 export const generateIslamicGuidance = async (question: string, language: 'ar' | 'en'): Promise<string> => {
-  if (!ai) {
-    return language === 'ar' 
-      ? "عذراً، خدمة الذكاء الاصطناعي غير مفعلة حالياً (مفتاح API مفقود)." 
-      : "Sorry, AI service is currently unavailable (API Key missing).";
-  }
+  // Initialize a new instance for each request to ensure it uses the most up-to-date environment variables.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   try {
     // تعليمات صارمة للمساعد: مساعد تقني فقط، يمنع الفتوى.
@@ -37,7 +27,7 @@ export const generateIslamicGuidance = async (question: string, language: 'ar' |
          4. Be concise and clear in explaining website navigation steps.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview', // Correct model for basic text/Q&A tasks.
       contents: question,
       config: {
         systemInstruction: systemPrompt,
@@ -45,6 +35,7 @@ export const generateIslamicGuidance = async (question: string, language: 'ar' |
       }
     });
 
+    // Access the generated text directly using the .text property.
     return response.text || (language === 'ar' ? "لم يتم إنشاء إجابة." : "No response generated.");
   } catch (error) {
     console.error("Gemini API Error:", error);
