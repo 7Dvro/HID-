@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Users, BookOpen, UserCheck, ArrowRight, ArrowLeft, Heart, Mic2, FileText, Calendar, CheckCircle, MapPin, Star, GraduationCap, ChevronRight, PlayCircle, MessageCircle, HelpCircle, Sparkles, Quote, Video, PenTool, ShieldAlert, Laptop, Search, Coins, Clock, Sun, Moon, ShieldCheck } from 'lucide-react';
@@ -87,7 +88,7 @@ const Home: React.FC = () => {
            
            {/* Floating Background Logo Watermark */}
            <div className="absolute top-1/2 right-12 -translate-y-1/2 w-96 h-96 opacity-[0.03] pointer-events-none">
-              <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" className="w-full h-full object-contain animate-spin-slow" alt="Emblem Watermark" />
+              <img src="/assets/logo.png" className="w-full h-full object-contain animate-spin-slow" alt="Emblem Watermark" />
            </div>
         </div>
 
@@ -100,7 +101,7 @@ const Home: React.FC = () => {
                 {/* Institutional Badge */}
                 <div className="inline-flex items-center gap-4 bg-white/5 backdrop-blur-xl px-6 py-3 rounded-2xl text-white border border-white/10 shadow-2xl mb-12 transform hover:scale-105 transition-all group">
                    <div className="w-12 h-12 bg-white rounded-xl p-1.5 shadow-inner">
-                      <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" alt="HID Official Seal" className="w-full h-full object-contain" />
+                      <img src="/assets/logo.png" alt="HID Official Seal" className="w-full h-full object-contain" />
                    </div>
                    <div className="h-10 w-px bg-white/20"></div>
                    <div className="text-start">
@@ -159,7 +160,7 @@ const Home: React.FC = () => {
                     <div className="relative z-10 p-16 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl rounded-[6rem] border border-white/20 shadow-5xl overflow-hidden group-hover:border-islamic-gold/40 transition-all duration-1000 group-hover:rotate-1">
                         <div className="absolute inset-0 arabesque-pattern opacity-10 pointer-events-none"></div>
                         <img 
-                          src="https://i.ibb.co/v6yT0D8/hid-logo.png" 
+                          src="/assets/logo.png" 
                           alt="HID Authority Seal" 
                           className="w-full h-auto object-contain drop-shadow-[0_30px_70px_rgba(0,107,63,0.5)] transform group-hover:scale-110 transition-transform duration-1000" 
                         />

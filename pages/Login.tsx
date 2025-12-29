@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const { login, register, loginWithGoogle } = useAuth();
   const { t, language } = useLanguage();
   const { showToast } = useToast();
+  // Fixed: Added 'const' to declare the navigate variable correctly
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -63,7 +64,7 @@ const Login: React.FC = () => {
             <div className="absolute inset-0 arabesque-pattern opacity-10"></div>
             <div className="relative z-10">
                 <div className="w-32 h-32 bg-white rounded-[2.5rem] flex items-center justify-center mb-10 border border-white/20 shadow-2xl animate-float p-3">
-                    <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" alt="HID Logo" className="w-full h-full object-contain" />
+                    <img src="/assets/logo.png" alt="HID Logo" className="w-full h-full object-contain" />
                 </div>
                 <h2 className="text-5xl font-bold font-serif mb-6 leading-tight">
                     {language === 'ar' ? 'بوابة منسوبي الهيئة' : 'Authority Members Portal'}
@@ -140,7 +141,7 @@ const Login: React.FC = () => {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full ps-12 pe-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-800 focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition"
+                            className="w-full ps-12 pe-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-600 focus:border-islamic-primary focus:ring-1 focus:ring-islamic-primary outline-none transition"
                             placeholder="mail@example.com"
                         />
                     </div>

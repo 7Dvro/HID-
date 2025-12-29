@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
           <div className="col-span-1 lg:col-span-1">
              <div className="flex items-center gap-4 mb-8">
                 <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-2xl p-2 border border-white/20">
-                  <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" alt="HID Authority Logo" className="w-full h-full object-contain" />
+                  <img src="/assets/logo.png" alt="HID Authority Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                    <h2 className="text-2xl font-bold font-serif leading-none">{t('heroTitle')}</h2>

@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
               <img 
-                src="https://i.ibb.co/v6yT0D8/hid-logo.png" 
+                src="/assets/logo.png" 
                 alt="HID Authority Logo" 
                 className="w-14 h-14 object-contain transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 drop-shadow-md" 
                 onError={(e) => {
@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in" onClick={() => setIsOpen(false)}></div>
           <div className={`fixed top-0 bottom-0 ${language === 'ar' ? 'right-0' : 'left-0'} w-80 bg-white dark:bg-gray-800 shadow-5xl z-50 p-6 flex flex-col animate-in ${language === 'ar' ? 'slide-in-from-right' : 'slide-in-from-left'} duration-300`}>
              <div className="flex justify-between items-center mb-10">
-                <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" alt="HID Logo" className="h-14 w-auto object-contain" />
+                <img src="/assets/logo.png" alt="HID Logo" className="h-14 w-auto object-contain" />
                 <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
                   <X className="w-6 h-6 text-gray-400" />
                 </button>

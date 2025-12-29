@@ -5,34 +5,37 @@ import { Book, Headphones, Search, Play, Pause, X, ArrowRight, ArrowLeft, Loader
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 
+// Only reciters with guaranteed verse-by-verse file availability on EveryAyah CDN
 const RECITERS: Reciter[] = [
-  {
-    id: 'sudais',
-    nameAr: 'الشيخ عبد الرحمن السديس',
-    nameEn: 'Sheikh Abdul Rahman Al-Sudais',
-    serverFull: 'https://server11.mp3quran.net/sds/',
-    serverVerse: 'Abdurrahmaan_As-Sudais_192kbps'
-  },
-  {
-    id: 'noreen',
-    nameAr: 'الشيخ نورين محمد صديق (رحمه الله)',
-    nameEn: 'Sheikh Noreen Muhammad Siddiq',
-    serverFull: 'https://server9.mp3quran.net/nourain/',
-    serverVerse: 'Noreen_Muhammad_Siddiq_128kbps'
-  },
-  {
-    id: 'alzain',
-    nameAr: 'الشيخ الزين محمد أحمد',
-    nameEn: 'Sheikh Al-Zain Muhammad Ahmad',
-    serverFull: 'https://server9.mp3quran.net/zain/',
-    serverVerse: 'Alzain_Mohammad_Ahmad_128kbps'
-  },
   {
     id: 'alafasy',
     nameAr: 'الشيخ مشاري العفاسي',
     nameEn: 'Sheikh Mishary Al-Afasy',
-    serverFull: 'https://server8.mp3quran.net/afs/',
     serverVerse: 'Alafasy_128kbps'
+  },
+  {
+    id: 'sudais',
+    nameAr: 'الشيخ عبد الرحمن السديس',
+    nameEn: 'Sheikh Abdul Rahman Al-Sudais',
+    serverVerse: 'Abdurrahmaan_As-Sudais_192kbps'
+  },
+  {
+    id: 'husary',
+    nameAr: 'الشيخ محمود خليل الحصري',
+    nameEn: 'Sheikh Mahmoud Khalil Al-Husary',
+    serverVerse: 'Husary_128kbps'
+  },
+  {
+    id: 'minshawi',
+    nameAr: 'الشيخ محمد صديق المنشاوي',
+    nameEn: 'Sheikh Muhammad Siddiq Al-Minshawi',
+    serverVerse: 'Minshawi_Murattal_128kbps'
+  },
+  {
+    id: 'shuraym',
+    nameAr: 'الشيخ سعود الشريم',
+    nameEn: 'Sheikh Saud Al-Shuraim',
+    serverVerse: 'Saood_ash-Shuraym_128kbps'
   }
 ];
 
@@ -40,7 +43,6 @@ interface Reciter {
   id: string;
   nameAr: string;
   nameEn: string;
-  serverFull: string;
   serverVerse: string;
 }
 
@@ -51,7 +53,7 @@ const Quran: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState<'mushaf' | 'audio' | 'mutoon' | 'khalwa'>('mushaf');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[1]); 
+  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[0]); 
   const [isReciterMenuOpen, setIsReciterMenuOpen] = useState(false);
   
   const [readingSurah, setReadingSurah] = useState<any | null>(null);
@@ -78,6 +80,7 @@ const Quran: React.FC = () => {
     return () => {
       if (audioInstance.current) {
         audioInstance.current.pause();
+        audioInstance.current = null;
       }
     };
   }, []);
@@ -87,6 +90,8 @@ const Quran: React.FC = () => {
   const handlePlayAyah = (index: number) => {
     if (audioInstance.current) {
       audioInstance.current.pause();
+      audioInstance.current.onended = null;
+      audioInstance.current.onerror = null;
       audioInstance.current = null;
     }
     
@@ -100,6 +105,7 @@ const Quran: React.FC = () => {
     const ayah = surahVerses[index];
     const surahStr = padNum(readingSurah.number);
     const ayahStr = padNum(ayah.numberInSurah);
+    
     const url = `https://everyayah.com/data/${selectedReciter.serverVerse}/${surahStr}${ayahStr}.mp3`;
     
     const audio = new Audio(url);
@@ -109,14 +115,19 @@ const Quran: React.FC = () => {
     audio.play().catch((err) => {
         console.error("Audio Play Error:", err);
         setIsPlaying(false);
-        showToast(language === 'ar' ? 'خطأ في تشغيل التلاوة' : 'Error playing recitation', 'error');
+        showToast(language === 'ar' ? 'الملف غير متوفر حالياً. سيتم تجاوز الآية.' : 'File unavailable. Skipping verse.', 'error');
+        setTimeout(() => handlePlayAyah(index + 1), 1200);
     });
 
     audio.onended = () => {
         handlePlayAyah(index + 1);
     };
 
-    // Scroll to active verse
+    audio.onerror = () => {
+        setIsPlaying(false);
+        handlePlayAyah(index + 1);
+    };
+
     const el = document.getElementById(`ayah-${ayah.numberInSurah}`);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
@@ -124,6 +135,7 @@ const Quran: React.FC = () => {
   const stopAudio = () => {
     if (audioInstance.current) {
       audioInstance.current.pause();
+      audioInstance.current.onended = null;
       audioInstance.current = null;
     }
     setIsPlaying(false);
@@ -254,8 +266,12 @@ const Quran: React.FC = () => {
                                 {bookmarks[surah.number] && <div className="absolute top-0 end-0 p-2 bg-islamic-gold text-white rounded-bl-xl shadow-lg"><BookmarkCheck className="w-4 h-4" /></div>}
                                 <div className="w-14 h-14 bg-white dark:bg-gray-700 text-islamic-primary dark:text-islamic-gold rounded-2xl flex items-center justify-center font-black text-lg shadow-sm group-hover:bg-islamic-primary group-hover:text-white transition-all">{surah.number}</div>
                                 <div className="text-center">
-                                    <h3 className="font-bold text-gray-900 dark:text-white font-serif text-2xl mb-1">{language === 'ar' ? 'سورة ' : 'Surah '}{surah.nameAr}</h3>
-                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-black">{surah.nameEn}</p>
+                                    <h3 className="font-bold text-gray-900 dark:text-white font-serif text-2xl mb-1">
+                                        {language === 'ar' ? 'سورة ' : 'Surah '}{surah.nameAr}
+                                    </h3>
+                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-black">
+                                        {language === 'ar' ? '' : 'Surah '}{surah.nameEn}
+                                    </p>
                                 </div>
                                 <div className="mt-2 w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                                     <div className="h-full bg-islamic-gold w-0 group-hover:w-full transition-all duration-700"></div>
@@ -289,8 +305,12 @@ const Quran: React.FC = () => {
                                 <div key={surah.number} onClick={() => handleOpenSurah(surah)} className="p-6 rounded-3xl border border-gray-100 dark:border-gray-700 hover:bg-islamic-primary/5 hover:border-islamic-primary transition-all flex items-center gap-5 group cursor-pointer shadow-sm">
                                     <button className="w-12 h-12 rounded-2xl flex items-center justify-center bg-gray-50 dark:bg-gray-700 text-islamic-primary group-hover:bg-islamic-primary group-hover:text-white transition-all shadow-sm"><Play className="w-6 h-6 ms-1" /></button>
                                     <div className="flex-1">
-                                        <h3 className="font-bold font-serif text-xl text-gray-800 dark:text-white">{language === 'ar' ? 'سورة ' : 'Surah '}{surah.nameAr}</h3>
-                                        <p className="text-[10px] text-gray-400 font-black uppercase">{surah.nameEn}</p>
+                                        <h3 className="font-bold font-serif text-xl text-gray-800 dark:text-white">
+                                            {language === 'ar' ? 'سورة ' : 'Surah '}{surah.nameAr}
+                                        </h3>
+                                        <p className="text-[10px] text-gray-400 font-black uppercase">
+                                            {language === 'ar' ? '' : 'Surah '}{surah.nameEn}
+                                        </p>
                                     </div>
                                     <Volume2 className="w-4 h-4 text-gray-200 group-hover:text-islamic-gold" />
                                 </div>
@@ -303,35 +323,55 @@ const Quran: React.FC = () => {
                 {activeTab === 'mutoon' && <div className="text-center py-20 text-gray-400 font-serif text-2xl">{language === 'ar' ? 'مكتبة المتون قيد التحديث' : 'Mutoon library being updated'}</div>}
               </>
           ) : (
-              <div className="animate-in fade-in slide-in-from-bottom-5 duration-700 pb-20 max-w-5xl mx-auto">
-                  {/* Surah Header - Mushaf Style */}
-                  <div className="flex flex-col sm:flex-row justify-between items-center mb-10 border-b dark:border-gray-700 pb-8 sticky top-[-2.5rem] bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl z-50 pt-4 px-2">
-                      <div className="flex items-center gap-4">
-                          <button onClick={closeReader} className="p-3 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-2xl transition-all shadow-sm"><X className="w-6 h-6" /></button>
-                          <button onClick={() => setIsSideMenuOpen(true)} className="flex items-center gap-3 px-6 py-3 bg-islamic-primary text-white rounded-2xl hover:bg-islamic-dark transition-all font-bold text-sm shadow-xl shadow-islamic-primary/20"><List className="w-5 h-5" /> {language === 'ar' ? 'الفهرس' : 'Index'}</button>
-                      </div>
-                      
-                      <div className="text-center mt-4 sm:mt-0 relative px-12">
-                          {/* Traditional Ornament Background */}
-                          <div className="absolute inset-0 flex items-center justify-center opacity-10 scale-150 pointer-events-none">
-                             <div className="w-48 h-12 border-2 border-islamic-gold rounded-full rotate-3"></div>
-                          </div>
-                          <h2 className="text-4xl sm:text-6xl font-serif text-islamic-dark dark:text-islamic-gold font-black drop-shadow-sm tracking-tight">
-                            {language === 'ar' ? 'سورة ' : 'Surah '}{readingSurah.nameAr}
-                          </h2>
-                          <div className="flex items-center justify-center gap-4 mt-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                             <span>Surah {readingSurah.number}</span>
-                             <div className="w-1.5 h-1.5 bg-islamic-gold rounded-full"></div>
-                             <span>{surahVerses.length} Ayahs</span>
-                          </div>
-                      </div>
+              <div className="-mt-24 lg:-mt-32 animate-in fade-in slide-in-from-bottom-5 duration-700 pb-20 relative z-[60]">
+                  {/* Sticky Absolute Header */}
+                  <div className="sticky top-0 z-[70] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b dark:border-gray-800 shadow-sm transition-all overflow-hidden">
+                      <div className="max-w-5xl mx-auto">
+                        {/* Row 1: Actions & Reciter */}
+                        <div className="flex justify-between items-center px-4 py-4 md:px-8">
+                            <div className="flex items-center gap-4">
+                                <button onClick={closeReader} className="p-3 bg-gray-50 dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-2xl transition-all shadow-sm"><X className="w-6 h-6" /></button>
+                                <div className="h-8 w-px bg-gray-100 dark:bg-gray-800"></div>
+                                <button onClick={() => setIsReciterMenuOpen(!isReciterMenuOpen)} className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl text-xs font-bold border border-gray-100 dark:border-gray-700 relative">
+                                    <User className="w-4 h-4 text-islamic-primary dark:text-islamic-gold" />
+                                    <span className="hidden sm:inline dark:text-gray-200">{language === 'ar' ? selectedReciter.nameAr : selectedReciter.nameEn}</span>
+                                    {isReciterMenuOpen && (
+                                        <div className="absolute top-full start-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-5xl rounded-xl p-2 z-[80] border border-gray-100 dark:border-gray-700 animate-in zoom-in-95">
+                                            {RECITERS.map(r => (
+                                                <button key={r.id} onClick={(e) => { e.stopPropagation(); setSelectedReciter(r); setIsReciterMenuOpen(false); stopAudio(); }} className={`w-full text-start px-4 py-2.5 rounded-lg text-[10px] font-bold transition ${selectedReciter.id === r.id ? 'bg-islamic-primary text-white' : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'}`}>
+                                                    {language === 'ar' ? r.nameAr : r.nameEn}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </button>
+                            </div>
 
-                      <div className="flex items-center gap-3 mt-4 sm:mt-0">
-                          {isPlaying ? (
-                              <button onClick={stopAudio} className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-2xl font-bold shadow-lg shadow-red-500/20"><Pause className="w-5 h-5" /> {language === 'ar' ? 'إيقاف' : 'Stop'}</button>
-                          ) : (
-                              <button onClick={() => handlePlayAyah(0)} className="flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white rounded-2xl font-bold shadow-lg shadow-islamic-gold/20"><Play className="w-5 h-5" /> {language === 'ar' ? 'تلاوة' : 'Listen'}</button>
-                          )}
+                            <div className="flex items-center gap-3">
+                                {isPlaying ? (
+                                    <button onClick={stopAudio} className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-2xl font-bold shadow-lg shadow-red-500/20 active:scale-95 transition-transform"><Pause className="w-5 h-5" /> {language === 'ar' ? 'إيقاف' : 'Stop'}</button>
+                                ) : (
+                                    <button onClick={() => handlePlayAyah(0)} className="flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white rounded-2xl font-bold shadow-lg shadow-islamic-gold/20 active:scale-95 transition-transform"><Play className="w-5 h-5" /> {language === 'ar' ? 'تلاوة' : 'Listen'}</button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Row 2: Surah Title & Index Button */}
+                        <div className="flex justify-between items-center px-4 py-3 md:px-8 border-t border-gray-50 dark:border-gray-800/50 bg-gray-50/30 dark:bg-gray-800/20">
+                            <button onClick={() => setIsSideMenuOpen(true)} className="flex items-center gap-3 px-4 py-2 bg-islamic-primary text-white rounded-xl hover:bg-islamic-dark transition-all font-bold text-[10px] sm:text-xs shadow-md shadow-islamic-primary/20"><List className="w-4 h-4" /> {language === 'ar' ? 'الفهرس' : 'Index'}</button>
+                            
+                            <div className="text-center flex-1">
+                                <h2 className="text-xl sm:text-3xl font-serif text-islamic-dark dark:text-islamic-gold font-black">
+                                    {language === 'ar' ? 'سورة ' : 'Surah '}{readingSurah.nameAr}
+                                </h2>
+                            </div>
+
+                            <div className="hidden sm:flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                                <span>{surahVerses.length} {language === 'ar' ? 'آية' : 'Ayahs'}</span>
+                                <div className="w-1 h-1 bg-islamic-gold rounded-full"></div>
+                                <span>{language === 'ar' ? 'سورة رقم' : 'No.'} {readingSurah.number}</span>
+                            </div>
+                        </div>
                       </div>
                   </div>
 
@@ -341,47 +381,57 @@ const Quran: React.FC = () => {
                           <p className="text-gray-400 font-black uppercase tracking-[0.4em] text-xs">{language === 'ar' ? 'جاري تحميل كلام الله...' : 'Fetching Holy Verses...'}</p>
                       </div>
                   ) : (
-                      <div className="relative bg-[#fffdf5] dark:bg-gray-900 rounded-[3rem] p-10 sm:p-20 shadow-2xl border-4 border-[#e9e4d1] dark:border-gray-800 transition-all duration-500 Mushaf-Container overflow-hidden">
-                          {/* Visual Background Pattern */}
-                          <div className="absolute inset-0 arabesque-pattern opacity-[0.03] pointer-events-none"></div>
-                          
-                          {/* Bismillah Header */}
-                          {readingSurah.number !== 1 && readingSurah.number !== 9 && (
-                              <div className="text-center mb-20 relative">
-                                  <div className="inline-block p-10 relative">
-                                     <div className="absolute inset-0 border-[3px] border-double border-islamic-gold/30 rounded-[3rem]"></div>
-                                     <h3 className="text-5xl font-serif text-gray-800 dark:text-gray-200">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</h3>
-                                  </div>
-                              </div>
-                          )}
+                      <div className="max-w-5xl mx-auto px-4 sm:px-0 mt-8">
+                        <div className="relative bg-[#fffdf5] dark:bg-[#0a0c10] rounded-[3rem] p-8 sm:p-16 md:p-24 shadow-2xl border-4 border-[#e9e4d1] dark:border-gray-800 transition-all duration-700 overflow-hidden leading-[3.2]">
+                            {/* Visual Background Pattern */}
+                            <div className="absolute inset-0 arabesque-pattern opacity-[0.03] dark:opacity-[0.02] pointer-events-none"></div>
+                            
+                            {/* Bismillah Header */}
+                            {readingSurah.number !== 1 && readingSurah.number !== 9 && (
+                                <div className="text-center mb-16 relative">
+                                    <div className="inline-block p-8 relative">
+                                        <h3 className="text-4xl sm:text-5xl font-serif text-gray-800 dark:text-gray-200">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</h3>
+                                    </div>
+                                </div>
+                            )}
 
-                          {/* Continuous Ayah Display */}
-                          <div className="text-center space-y-12 leading-[3] font-serif text-4xl sm:text-5xl md:text-6xl text-gray-800 dark:text-gray-100" dir="rtl">
-                                {surahVerses.map((ayah, index) => (
-                                    <span 
-                                      key={ayah.number} 
-                                      id={`ayah-${ayah.numberInSurah}`}
-                                      className={`inline-block relative px-2 transition-all duration-1000 rounded-3xl group cursor-pointer ${activeVerseIndex === index ? 'bg-islamic-gold/10 scale-105 shadow-xl ring-2 ring-islamic-gold/50' : 'hover:bg-islamic-primary/5'}`}
-                                      onClick={() => handlePlayAyah(index)}
-                                    >
-                                        <span className="relative z-10">{ayah.text}</span>
-                                        
-                                        {/* Ayah End Ornament */}
-                                        <span className="inline-flex items-center justify-center relative mx-4 -top-1">
-                                           <span className="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/e4/Ayah_Sign.png')] bg-contain bg-no-repeat bg-center opacity-40 dark:invert"></span>
-                                           <span className="relative z-10 text-xs sm:text-sm font-bold text-islamic-gold w-10 h-10 flex items-center justify-center font-sans tracking-tight">
-                                              {ayah.numberInSurah}
-                                           </span>
-                                        </span>
+                            {/* Continuous Ayah Display */}
+                            <div className="text-center font-serif text-4xl sm:text-5xl md:text-6xl text-gray-800 dark:text-gray-100" dir="rtl">
+                                    {surahVerses.map((ayah, index) => (
+                                        <React.Fragment key={ayah.number}>
+                                            <span 
+                                            id={`ayah-${ayah.numberInSurah}`}
+                                            className={`inline relative px-1 transition-all duration-700 cursor-pointer rounded-xl ${activeVerseIndex === index ? 'bg-islamic-gold/20 dark:bg-islamic-gold/10 ring-2 ring-islamic-gold/40' : 'hover:bg-islamic-primary/5 dark:hover:bg-islamic-gold/5'}`}
+                                            onClick={() => handlePlayAyah(index)}
+                                            >
+                                                {ayah.text}
+                                            </span>
+                                            
+                                            {/* Traditional Ayah End Ornament */}
+                                            <span className="inline-flex items-center justify-center relative mx-4 align-middle select-none">
+                                                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-islamic-gold/60 dark:text-islamic-gold/40" viewBox="0 0 100 100">
+                                                    <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="currentColor" strokeWidth="4" />
+                                                    <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
+                                                </svg>
+                                                <span className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs font-bold font-sans text-islamic-primary dark:text-islamic-gold">
+                                                    {ayah.numberInSurah}
+                                                </span>
+                                            </span>
+                                        </React.Fragment>
+                                    ))}
+                            </div>
 
-                                        {/* Hover Interaction Menu */}
-                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all z-20 flex gap-1 bg-white dark:bg-gray-800 p-1 rounded-full shadow-2xl border dark:border-gray-700">
-                                            <button onClick={(e) => { e.stopPropagation(); fetchTafsir(ayah); }} className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full text-islamic-primary" title={t('readTafsir')}><BookOpen className="w-4 h-4" /></button>
-                                            <button onClick={(e) => { e.stopPropagation(); toggleBookmark(readingSurah.number, ayah.numberInSurah); }} className={`p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full ${bookmarks[readingSurah.number] === ayah.numberInSurah ? 'text-red-500' : 'text-gray-400'}`}><Bookmark className="w-4 h-4" /></button>
-                                        </div>
-                                    </span>
-                                ))}
-                          </div>
+                            {/* Float Menu for active verse */}
+                            {activeVerseIndex !== null && (
+                                <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/90 dark:bg-gray-800/95 backdrop-blur-xl p-3 rounded-full shadow-5xl border border-islamic-primary/20 dark:border-islamic-gold/20 z-[60] animate-in slide-in-from-bottom-5 transition-colors">
+                                    <button onClick={() => fetchTafsir(surahVerses[activeVerseIndex])} className="p-3 bg-islamic-primary dark:bg-islamic-gold text-white dark:text-gray-900 rounded-full hover:bg-islamic-dark transition shadow-md"><BookOpen className="w-5 h-5" /></button>
+                                    <div className="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+                                    <button onClick={() => toggleBookmark(readingSurah.number, surahVerses[activeVerseIndex].numberInSurah)} className={`p-3 rounded-full transition shadow-md ${bookmarks[readingSurah.number] === surahVerses[activeVerseIndex].numberInSurah ? 'bg-red-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-500'}`}><Bookmark className="w-5 h-5" /></button>
+                                    <div className="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+                                    <button onClick={stopAudio} className="p-3 bg-gray-100 dark:bg-gray-700 text-red-500 rounded-full hover:bg-red-50 transition shadow-md"><Pause className="w-5 h-5" /></button>
+                                </div>
+                            )}
+                        </div>
                       </div>
                   )}
               </div>
@@ -419,11 +469,11 @@ const Quran: React.FC = () => {
 
           {/* Tafsir Modal */}
           {selectedAyahForTafsir && (
-              <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-islamic-dark/70 backdrop-blur-xl animate-in fade-in duration-300">
+              <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 bg-islamic-dark/70 backdrop-blur-xl animate-in fade-in duration-300">
                   <div className="bg-white dark:bg-gray-900 rounded-[3rem] shadow-5xl w-full max-w-2xl overflow-hidden flex flex-col relative border border-white/10">
-                      <button onClick={() => setSelectedAyahForTafsir(null)} className="absolute top-8 end-8 p-3 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all z-20"><X className="w-6 h-6" /></button>
+                      <button onClick={() => setSelectedAyahForTafsir(null)} className="absolute top-8 end-8 p-3 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all z-20"><X className="w-5 h-5" /></button>
                       
-                      <div className="bg-islamic-primary p-12 text-center text-white relative">
+                      <div className="bg-islamic-primary p-10 sm:p-12 text-center text-white relative">
                           <div className="absolute inset-0 arabesque-pattern opacity-10"></div>
                           <div className="relative z-10">
                               <h2 className="text-3xl font-bold font-serif mb-2">{language === 'ar' ? 'تفسير الجلالين' : 'Tafsir Al-Jalalayn'}</h2>
@@ -431,7 +481,7 @@ const Quran: React.FC = () => {
                           </div>
                       </div>
 
-                      <div className="p-12">
+                      <div className="p-8 sm:p-12 overflow-y-auto">
                           <div className="mb-10 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-[2rem] border border-gray-100 dark:border-gray-700">
                               <p className="font-serif text-3xl leading-relaxed text-gray-800 dark:text-gray-100 text-center" dir="rtl">{selectedAyahForTafsir.text}</p>
                           </div>

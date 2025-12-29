@@ -266,7 +266,7 @@ const AdminDashboard: React.FC = () => {
           <div className="p-8 border-b dark:border-gray-800 mb-8">
               <Link to="/" className="flex items-center gap-4 group">
                   <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center shadow-xl p-1">
-                    <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <h2 className="text-lg font-black text-islamic-primary dark:text-islamic-gold leading-none tracking-tighter">HID ADMIN</h2>
