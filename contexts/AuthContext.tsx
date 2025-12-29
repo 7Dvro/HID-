@@ -18,7 +18,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const { showToast } = useToast();
 
-  // Load user from local storage on boot
   useEffect(() => {
     const storedUser = localStorage.getItem('hid_user');
     if (storedUser) {
@@ -32,31 +31,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const login = async (email: string, pass: string): Promise<boolean> => {
-    // Simulate API call
     return new Promise((resolve) => {
       setTimeout(() => {
-        if (email.includes('admin')) {
+        // Designated Admin Check
+        if (email === 'mohemadmuzamil@gmail.com' && pass === 'admin@123') {
           saveUser({
-            id: '1',
-            name: 'مدير النظام',
+            id: 'admin_001',
+            name: 'محمد مزمل',
             email: email,
             role: 'admin',
-            avatar: 'https://ui-avatars.com/api/?name=Admin&background=006B3F&color=fff',
+            avatar: 'https://ui-avatars.com/api/?name=MM&background=D4AF37&color=fff',
             joinDate: new Date().toISOString()
           });
-        } else {
+          resolve(true);
+          return;
+        }
+
+        // Standard User Mock
+        if (pass.length >= 6) {
           saveUser({
-            id: '2',
-            name: 'أحمد محمد',
+            id: 'user_' + Date.now(),
+            name: email.split('@')[0],
             email: email,
             role: 'user',
-            avatar: 'https://ui-avatars.com/api/?name=Ahmed&background=006B3F&color=fff',
-            joinDate: new Date().toISOString(),
-            bio: 'مهتم بعلوم القرآن والشريعة',
-            location: 'الرياض، السعودية'
+            avatar: `https://ui-avatars.com/api/?name=${email}&background=006B3F&color=fff`,
+            joinDate: new Date().toISOString()
           });
+          resolve(true);
+        } else {
+          showToast('كلمة المرور غير صحيحة', 'error');
+          resolve(false);
         }
-        resolve(true);
       }, 1000);
     });
   };

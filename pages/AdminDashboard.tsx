@@ -1,454 +1,336 @@
+
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { Navigate } from 'react-router-dom';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { Users, FileText, Activity, BookOpen, MessageSquare, LayoutDashboard, Settings, LogOut, Search, Trash2, Edit, Plus, CheckCircle, XCircle, MoreVertical, Shield } from 'lucide-react';
-
-// --- Mock Data ---
-const INITIAL_USERS = [
-  { id: 1, name: 'Ahmed Mohamed', email: 'ahmed@hid.sa', role: 'admin', status: 'active', joinDate: '2023-01-15' },
-  { id: 2, name: 'Sheikh Ibrahim', email: 'ibrahim@mosque.com', role: 'imam', status: 'active', joinDate: '2023-03-10' },
-  { id: 3, name: 'Sarah Ali', email: 'sarah@gmail.com', role: 'user', status: 'active', joinDate: '2023-05-22' },
-  { id: 4, name: 'User 4', email: 'user4@test.com', role: 'user', status: 'banned', joinDate: '2023-06-01' },
-  { id: 5, name: 'Dr. Saad', email: 'saad@edu.sa', role: 'imam', status: 'active', joinDate: '2023-02-18' },
-];
-
-const INITIAL_COURSES = [
-  { id: 1, title: 'Fiqh of Worship', instructor: 'Dr. Saad', students: 1540, status: 'published' },
-  { id: 2, title: 'Quran Sciences', instructor: 'Sheikh Ahmed', students: 2100, status: 'published' },
-  { id: 3, title: 'Public Speaking', instructor: 'Mr. Mohammed', students: 850, status: 'draft' },
-];
-
-const INITIAL_POSTS = [
-  { id: 1, author: 'Sheikh Ibrahim', content: 'Discussion about the importance of Fajr prayer...', date: '2h ago', reports: 0 },
-  { id: 2, author: 'User 4', content: 'Inappropriate content spam...', date: '5h ago', reports: 5 },
-  { id: 3, author: 'Dr. Saad', content: 'Join us for the lecture tonight.', date: '1d ago', reports: 0 },
-];
-
-const INITIAL_FATWAS = [
-  { id: 1, question: 'Ruling on crypto?', category: 'Transactions', status: 'approved' },
-  { id: 2, question: 'Prayer on plane?', category: 'Worship', status: 'approved' },
-  { id: 3, question: 'Inheritance issue...', category: 'Family', status: 'pending' },
-];
-
-const CHART_DATA = [
-  { name: 'Jan', users: 400, content: 240 },
-  { name: 'Feb', users: 300, content: 139 },
-  { name: 'Mar', users: 200, content: 980 },
-  { name: 'Apr', users: 278, content: 390 },
-  { name: 'May', users: 189, content: 480 },
-  { name: 'Jun', users: 239, content: 380 },
-];
+import { Navigate, Link } from 'react-router-dom';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { 
+    Users, Activity, BookOpen, MessageSquare, LayoutDashboard, Settings, 
+    LogOut, Search, CheckCircle, XCircle, ChevronRight, PenTool, Database, 
+    Monitor, Home, Info, Newspaper, Book, Layers, Bell, Eye, RefreshCw, Briefcase, EyeOff
+} from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
-  const { t, language } = useLanguage();
-  const { user } = useAuth();
+  const { t, language, updateTranslation, pageVisibility, togglePageVisibility, getAllTranslations } = useLanguage();
+  const { user, logout } = useAuth();
   const { showToast } = useToast();
 
-  // Navigation State
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'courses' | 'posts' | 'content'>('overview');
-  
-  // Data State (Simulating DB)
-  const [usersList, setUsersList] = useState(INITIAL_USERS);
-  const [coursesList, setCoursesList] = useState(INITIAL_COURSES);
-  const [postsList, setPostsList] = useState(INITIAL_POSTS);
-  const [fatwasList, setFatwasList] = useState(INITIAL_FATWAS);
-  
-  // UI State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<'course' | 'user' | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'pages' | 'content' | 'members' | 'settings'>('overview');
+  const [subTab, setSubTab] = useState('home');
 
   if (!user || user.role !== 'admin') {
     return <Navigate to="/login" replace />;
   }
 
-  // --- Handlers ---
+  const CHART_DATA = [
+    { name: 'Sat', users: 400, fatwas: 120 },
+    { name: 'Sun', users: 600, fatwas: 150 },
+    { name: 'Mon', users: 800, fatwas: 180 },
+    { name: 'Tue', users: 750, fatwas: 200 },
+    { name: 'Wed', users: 950, fatwas: 250 },
+    { name: 'Thu', users: 1100, fatwas: 300 },
+    { name: 'Fri', users: 1500, fatwas: 450 },
+  ];
 
-  const handleDeleteUser = (id: number) => {
-    if (window.confirm(language === 'ar' ? 'هل أنت متأكد من حذف هذا المستخدم؟' : 'Are you sure you want to delete this user?')) {
-      setUsersList(prev => prev.filter(u => u.id !== id));
-      showToast(language === 'ar' ? 'تم حذف المستخدم' : 'User deleted', 'success');
-    }
+  const PAGE_TRANSLATION_MAP: Record<string, string[]> = {
+    home: ['heroTitle', 'heroSubtitle', 'exploreCourses', 'askAi'],
+    about: ['vision', 'mission', 'values', 'aboutText'],
+    quran: ['khalwaManagement', 'mutoon', 'verseOfTheDay'],
+    news: ['latestNews', 'viewAllNews', 'readMore'],
   };
 
-  const handleToggleUserStatus = (id: number) => {
-    setUsersList(prev => prev.map(u => u.id === id ? { ...u, status: u.status === 'active' ? 'banned' : 'active' } : u));
-    showToast(language === 'ar' ? 'تم تحديث حالة المستخدم' : 'User status updated', 'info');
+  const handleSaveTranslation = (key: string, arValue: string, enValue: string) => {
+    updateTranslation(key, arValue, enValue);
+    showToast(language === 'ar' ? 'تم حفظ التعديلات بنجاح' : 'Changes saved successfully', 'success');
   };
 
-  const handleDeletePost = (id: number) => {
-    setPostsList(prev => prev.filter(p => p.id !== id));
-    showToast(language === 'ar' ? 'تم حذف المنشور' : 'Post deleted', 'success');
-  };
-
-  const handleDeleteCourse = (id: number) => {
-     setCoursesList(prev => prev.filter(c => c.id !== id));
-     showToast(language === 'ar' ? 'تم حذف الدورة' : 'Course deleted', 'success');
-  };
-
-  const handleApproveFatwa = (id: number) => {
-      setFatwasList(prev => prev.map(f => f.id === id ? { ...f, status: 'approved' } : f));
-      showToast(language === 'ar' ? 'تم اعتماد الفتوى' : 'Fatwa approved', 'success');
-  };
-
-  // --- Render Components ---
-
-  const StatCard = ({ title, value, icon: Icon, color, change }: any) => (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between">
-       <div>
-         <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">{title}</p>
-         <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{value}</h3>
-         {change && <span className="text-xs text-green-500 flex items-center mt-1"><Activity className="w-3 h-3 mr-1" /> {change}</span>}
-       </div>
-       <div className={`p-3 rounded-full ${color} bg-opacity-10 text-white`}>
-         <Icon className={`w-6 h-6 ${color.replace('bg-', 'text-')}`} />
-       </div>
-    </div>
+  const SidebarItem = ({ id, icon: Icon, label }: any) => (
+    <button
+        onClick={() => setActiveTab(id)}
+        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 ${
+            activeTab === id 
+            ? 'bg-islamic-primary text-white shadow-xl shadow-islamic-primary/20 scale-[1.02]' 
+            : 'text-gray-400 hover:bg-islamic-primary/5 hover:text-islamic-primary dark:hover:text-islamic-gold'
+        }`}
+    >
+        <Icon className="w-5 h-5" />
+        <span className="font-bold text-sm tracking-wide">{label}</span>
+    </button>
   );
 
   const renderOverview = () => (
-      <div className="space-y-6 animate-in fade-in">
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             <StatCard title={t('users')} value={usersList.length} icon={Users} color="bg-blue-600" change="+12% this month" />
-             <StatCard title={language === 'ar' ? 'الدورات' : 'Courses'} value={coursesList.length} icon={BookOpen} color="bg-islamic-primary" change="+3 new" />
-             <StatCard title={language === 'ar' ? 'المنشورات' : 'Posts'} value={postsList.length} icon={MessageSquare} color="bg-purple-600" />
-             <StatCard title={language === 'ar' ? 'الفتاوى' : 'Fatwas'} value={fatwasList.length} icon={FileText} color="bg-orange-600" change="5 pending" />
+    <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+                { label: 'إجمالي الزيارات', value: '128.5K', icon: Eye, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+                { label: 'الأعضاء النشطون', value: '12,450', icon: Users, color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+                { label: 'الفتاوى المجابة', value: '8,200', icon: MessageSquare, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+                { label: 'طلبات الانضمام', value: '45', icon: CheckCircle, color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+            ].map((stat, i) => (
+                <div key={i} className="bg-white dark:bg-gray-800 p-8 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm flex items-center gap-6 group hover:shadow-md transition-all">
+                    <div className={`w-14 h-14 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                        <stat.icon className="w-7 h-7" />
+                    </div>
+                    <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{stat.label}</p>
+                        <h4 className="text-3xl font-bold text-gray-900 dark:text-white font-serif">{stat.value}</h4>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-10 rounded-[3rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div className="flex justify-between items-center mb-10">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <Activity className="w-6 h-6 text-islamic-primary" />
+                        {language === 'ar' ? 'تحليلات المنصة الأسبوعية' : 'Weekly Platform Analytics'}
+                    </h3>
+                </div>
+                <div className="h-[350px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={CHART_DATA}>
+                            <defs>
+                                <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#006B3F" stopOpacity={0.1}/>
+                                    <stop offset="95%" stopColor="#006B3F" stopOpacity={0}/>
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#9ca3af'}} />
+                            <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#9ca3af'}} />
+                            <Tooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.1)'}} />
+                            <Area type="monotone" dataKey="users" stroke="#006B3F" strokeWidth={4} fillOpacity={1} fill="url(#colorUsers)" />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 p-10 rounded-[3rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-8">{language === 'ar' ? 'المهام المعلقة' : 'Pending Tasks'}</h3>
+                <div className="space-y-6">
+                    {[
+                        { title: 'مراجعة طلب فتوى جديد', time: 'منذ 5 دقائق', icon: MessageSquare, color: 'text-blue-500' },
+                        { title: 'اعتماد 3 دورات تدريبية', time: 'منذ ساعة', icon: BookOpen, color: 'text-emerald-500' },
+                        { title: 'تحديث بيانات إمام جامع', time: 'منذ ساعتين', icon: CheckCircle, color: 'text-amber-500' },
+                    ].map((task, i) => (
+                        <div key={i} className="flex items-center gap-5 p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer group">
+                            <div className={`w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center ${task.color}`}>
+                                <task.icon className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-sm font-bold text-gray-800 dark:text-white group-hover:text-islamic-primary transition-colors">{task.title}</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">{task.time}</p>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-gray-300" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+  );
+
+  const renderPageManager = () => {
+    const allTrans = getAllTranslations();
+    const keysToEdit = PAGE_TRANSLATION_MAP[subTab] || [];
+
+    return (
+      <div className="animate-in fade-in duration-500 space-y-8">
+          <div className="flex gap-4 p-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 w-max overflow-hidden">
+              {[
+                  { id: 'home', icon: Home, label: 'الرئيسية' },
+                  { id: 'about', icon: Info, label: 'عن الهيئة' },
+                  { id: 'quran', icon: Book, label: 'القرآن' },
+                  { id: 'news', icon: Newspaper, label: 'الأخبار' },
+              ].map(tab => (
+                  <button 
+                      key={tab.id}
+                      onClick={() => setSubTab(tab.id)}
+                      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${subTab === tab.id ? 'bg-islamic-primary text-white shadow-md' : 'text-gray-400 hover:bg-gray-50'}`}
+                  >
+                      <tab.icon className="w-4 h-4" />
+                      {tab.label}
+                  </button>
+              ))}
           </div>
 
-          {/* Charts Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-gray-800 dark:text-white mb-6">{language === 'ar' ? 'نمو المنصة' : 'Platform Growth'}</h3>
-                <div className="h-72 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={CHART_DATA}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
-                      <XAxis dataKey="name" tick={{fill: '#9ca3af'}} axisLine={false} tickLine={false} />
-                      <YAxis tick={{fill: '#9ca3af'}} axisLine={false} tickLine={false} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none' }} />
-                      <Line type="monotone" dataKey="users" stroke="#006B3F" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
-                      <Line type="monotone" dataKey="content" stroke="#D4AF37" strokeWidth={3} dot={{r: 4}} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-             </div>
+          <div className="bg-white dark:bg-gray-800 p-10 rounded-[3rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div className="flex justify-between items-center mb-10 pb-6 border-b dark:border-gray-700">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white font-serif">
+                      {language === 'ar' ? `تعديل محتوى صفحة ${subTab}` : `Edit content for ${subTab} page`}
+                  </h3>
+              </div>
 
-             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-gray-800 dark:text-white mb-6">{language === 'ar' ? 'توزيع المستخدمين' : 'User Distribution'}</h3>
-                <div className="h-72 w-full flex justify-center">
-                   <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={[
-                            { name: 'Users', value: usersList.filter(u => u.role === 'user').length },
-                            { name: 'Imams', value: usersList.filter(u => u.role === 'imam').length },
-                            { name: 'Admins', value: usersList.filter(u => u.role === 'admin').length },
-                          ]}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
-                          paddingAngle={5}
-                          dataKey="value"
+              <div className="space-y-12 max-w-5xl">
+                  {keysToEdit.map(key => (
+                    <div key={key} className="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 space-y-6">
+                        <div className="flex justify-between items-center">
+                            <span className="text-xs font-black uppercase tracking-widest text-islamic-primary dark:text-islamic-gold">KEY: {key}</span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest px-2">Arabic Content (AR)</label>
+                                <textarea 
+                                  className="w-full p-4 bg-white dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600 outline-none focus:ring-2 focus:ring-islamic-primary/20 text-sm" 
+                                  rows={key.toLowerCase().includes('text') || key.toLowerCase().includes('subtitle') ? 4 : 1}
+                                  id={`${key}-ar`}
+                                  defaultValue={allTrans[key]?.ar}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest px-2">English Content (EN)</label>
+                                <textarea 
+                                  className="w-full p-4 bg-white dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600 outline-none focus:ring-2 focus:ring-islamic-primary/20 text-sm" 
+                                  rows={key.toLowerCase().includes('text') || key.toLowerCase().includes('subtitle') ? 4 : 1}
+                                  id={`${key}-en`}
+                                  defaultValue={allTrans[key]?.en}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end">
+                            <button 
+                                onClick={() => {
+                                    const ar = (document.getElementById(`${key}-ar`) as HTMLTextAreaElement).value;
+                                    const en = (document.getElementById(`${key}-en`) as HTMLTextAreaElement).value;
+                                    handleSaveTranslation(key, ar, en);
+                                }}
+                                className="px-6 py-2 bg-islamic-primary text-white rounded-xl text-xs font-bold shadow-lg"
+                            >
+                                {language === 'ar' ? 'حفظ الحقل' : 'Save Field'}
+                            </button>
+                        </div>
+                    </div>
+                  ))}
+
+                  {keysToEdit.length === 0 && (
+                      <div className="py-20 text-center text-gray-400 italic">
+                          {language === 'ar' ? 'لا يوجد محتوى قابل للتعديل لهذه الصفحة حالياً' : 'No editable content found for this page'}
+                      </div>
+                  )}
+              </div>
+          </div>
+      </div>
+    );
+  };
+
+  const renderSettings = () => (
+      <div className="animate-in fade-in duration-500 space-y-8">
+          <div className="bg-white dark:bg-gray-800 p-10 rounded-[3rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white font-serif mb-8 flex items-center gap-3">
+                  <Monitor className="w-6 h-6 text-islamic-gold" />
+                  {language === 'ar' ? 'إعدادات ظهور الصفحات' : 'Page Visibility Settings'}
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                    { id: 'news', icon: Newspaper, label: 'الأخبار' },
+                    { id: 'quran', icon: Book, label: 'القرآن' },
+                    { id: 'imams', icon: Users, label: 'الأئمة' },
+                    { id: 'education', icon: BookOpen, label: 'التعليم' },
+                    { id: 'jobs', icon: Briefcase, label: 'الوظائف' },
+                  ].map(page => (
+                    <div key={page.id} className="p-6 bg-gray-50 dark:bg-gray-900/50 rounded-3xl border border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center text-islamic-primary shadow-sm">
+                                <page.icon className="w-5 h-5" />
+                            </div>
+                            <span className="font-bold text-sm text-gray-700 dark:text-gray-300">{page.label}</span>
+                        </div>
+                        <button 
+                            onClick={() => togglePageVisibility(page.id)}
+                            className={`w-14 h-8 rounded-full p-1 transition-colors flex items-center ${pageVisibility[page.id] ? 'bg-islamic-primary' : 'bg-gray-300 dark:bg-gray-600'}`}
                         >
-                          <Cell fill="#0088FE" />
-                          <Cell fill="#00C49F" />
-                          <Cell fill="#FFBB28" />
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                   </ResponsiveContainer>
-                </div>
-             </div>
+                            <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform ${pageVisibility[page.id] ? (language === 'ar' ? '-translate-x-6' : 'translate-x-6') : 'translate-x-0'}`}></div>
+                        </button>
+                    </div>
+                  ))}
+              </div>
+
+              <div className="mt-12 pt-8 border-t dark:border-gray-700">
+                  <h4 className="text-sm font-bold text-gray-500 mb-6 uppercase tracking-[0.2em]">{language === 'ar' ? 'إعدادات النظام المتقدمة' : 'Advanced System Settings'}</h4>
+                  <div className="flex gap-4">
+                      <button className="px-8 py-3 bg-red-50 text-red-600 rounded-2xl text-xs font-bold">Clear All Cache</button>
+                      <button className="px-8 py-3 bg-gray-100 text-gray-600 rounded-2xl text-xs font-bold">Restore Defaults</button>
+                  </div>
+              </div>
           </div>
-      </div>
-  );
-
-  const renderUsersTable = () => (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden animate-in fade-in">
-           <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="relative w-full md:w-96">
-                    <input 
-                        type="text" 
-                        placeholder={language === 'ar' ? 'بحث عن مستخدم...' : 'Search users...'}
-                        className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-islamic-primary outline-none"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <Search className="absolute start-3 top-2.5 w-4 h-4 text-gray-400" />
-                </div>
-                <button className="bg-islamic-primary text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-islamic-dark transition">
-                    <Plus className="w-4 h-4" />
-                    {language === 'ar' ? 'إضافة مستخدم' : 'Add User'}
-                </button>
-           </div>
-           
-           <div className="overflow-x-auto">
-               <table className="w-full text-start">
-                   <thead className="bg-gray-50 dark:bg-gray-700/50 text-xs text-gray-500 dark:text-gray-400 uppercase">
-                       <tr>
-                           <th className="px-6 py-3 text-start">ID</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الاسم' : 'Name'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الدور' : 'Role'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الحالة' : 'Status'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الإجراءات' : 'Actions'}</th>
-                       </tr>
-                   </thead>
-                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                       {usersList.filter(u => u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.email.toLowerCase().includes(searchQuery.toLowerCase())).map((u) => (
-                           <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                               <td className="px-6 py-4 text-sm text-gray-500">#{u.id}</td>
-                               <td className="px-6 py-4">
-                                   <div className="flex flex-col">
-                                       <span className="font-bold text-gray-900 dark:text-white">{u.name}</span>
-                                       <span className="text-xs text-gray-500 dark:text-gray-400">{u.email}</span>
-                                   </div>
-                               </td>
-                               <td className="px-6 py-4">
-                                   <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                       u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 
-                                       u.role === 'imam' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                   }`}>
-                                       {u.role.toUpperCase()}
-                                   </span>
-                               </td>
-                               <td className="px-6 py-4">
-                                    <span className={`flex items-center gap-1 text-xs font-bold ${u.status === 'active' ? 'text-green-600' : 'text-red-600'}`}>
-                                        {u.status === 'active' ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
-                                        {u.status}
-                                    </span>
-                               </td>
-                               <td className="px-6 py-4">
-                                   <div className="flex items-center gap-3">
-                                       <button onClick={() => handleToggleUserStatus(u.id)} className="text-gray-400 hover:text-orange-500 transition">
-                                           <Shield className="w-4 h-4" />
-                                       </button>
-                                       <button className="text-gray-400 hover:text-blue-500 transition">
-                                           <Edit className="w-4 h-4" />
-                                       </button>
-                                       <button onClick={() => handleDeleteUser(u.id)} className="text-gray-400 hover:text-red-500 transition">
-                                           <Trash2 className="w-4 h-4" />
-                                       </button>
-                                   </div>
-                               </td>
-                           </tr>
-                       ))}
-                   </tbody>
-               </table>
-           </div>
-      </div>
-  );
-
-  const renderCoursesTable = () => (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden animate-in fade-in">
-           <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                <h3 className="font-bold text-gray-800 dark:text-white">{language === 'ar' ? 'إدارة الدورات' : 'Manage Courses'}</h3>
-                <button 
-                  onClick={() => { setModalType('course'); setIsModalOpen(true); }}
-                  className="bg-islamic-primary text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-islamic-dark transition"
-                >
-                    <Plus className="w-4 h-4" />
-                    {language === 'ar' ? 'دورة جديدة' : 'New Course'}
-                </button>
-           </div>
-           <div className="overflow-x-auto">
-               <table className="w-full text-start">
-                   <thead className="bg-gray-50 dark:bg-gray-700/50 text-xs text-gray-500 dark:text-gray-400 uppercase">
-                       <tr>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'عنوان الدورة' : 'Title'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'المحاضر' : 'Instructor'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الطلاب' : 'Students'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الحالة' : 'Status'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الإجراءات' : 'Actions'}</th>
-                       </tr>
-                   </thead>
-                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                       {coursesList.map((c) => (
-                           <tr key={c.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                               <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">{c.title}</td>
-                               <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{c.instructor}</td>
-                               <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{c.students}</td>
-                               <td className="px-6 py-4">
-                                   <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                       c.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                                   }`}>
-                                       {c.status}
-                                   </span>
-                               </td>
-                               <td className="px-6 py-4">
-                                   <div className="flex items-center gap-3">
-                                       <button className="text-gray-400 hover:text-blue-500 transition"><Edit className="w-4 h-4" /></button>
-                                       <button onClick={() => handleDeleteCourse(c.id)} className="text-gray-400 hover:text-red-500 transition"><Trash2 className="w-4 h-4" /></button>
-                                   </div>
-                               </td>
-                           </tr>
-                       ))}
-                   </tbody>
-               </table>
-           </div>
-      </div>
-  );
-
-  const renderPosts = () => (
-      <div className="grid grid-cols-1 gap-4 animate-in fade-in">
-           {postsList.map(post => (
-               <div key={post.id} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex justify-between items-start">
-                   <div>
-                       <div className="flex items-center gap-2 mb-2">
-                           <span className="font-bold text-gray-900 dark:text-white">{post.author}</span>
-                           <span className="text-xs text-gray-400">{post.date}</span>
-                           {post.reports > 0 && <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-bold">{post.reports} Reports</span>}
-                       </div>
-                       <p className="text-gray-600 dark:text-gray-300">{post.content}</p>
-                   </div>
-                   <div className="flex gap-2">
-                       <button className="p-2 text-gray-400 hover:text-blue-500 transition bg-gray-50 dark:bg-gray-700 rounded-lg">
-                           <Shield className="w-4 h-4" />
-                       </button>
-                       <button onClick={() => handleDeletePost(post.id)} className="p-2 text-gray-400 hover:text-red-500 transition bg-gray-50 dark:bg-gray-700 rounded-lg">
-                           <Trash2 className="w-4 h-4" />
-                       </button>
-                   </div>
-               </div>
-           ))}
-           {postsList.length === 0 && <p className="text-center text-gray-400">No posts found.</p>}
-      </div>
-  );
-
-  const renderContent = () => (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden animate-in fade-in">
-          <div className="p-4 border-b border-gray-100 dark:border-gray-700">
-               <h3 className="font-bold text-gray-800 dark:text-white">{language === 'ar' ? 'مراجعة الفتاوى' : 'Fatwa Review'}</h3>
-          </div>
-          <div className="overflow-x-auto">
-               <table className="w-full text-start">
-                   <thead className="bg-gray-50 dark:bg-gray-700/50 text-xs text-gray-500 dark:text-gray-400 uppercase">
-                       <tr>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'السؤال' : 'Question'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'التصنيف' : 'Category'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الحالة' : 'Status'}</th>
-                           <th className="px-6 py-3 text-start">{language === 'ar' ? 'الإجراءات' : 'Actions'}</th>
-                       </tr>
-                   </thead>
-                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                       {fatwasList.map((f) => (
-                           <tr key={f.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                               <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{f.question}</td>
-                               <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{f.category}</td>
-                               <td className="px-6 py-4">
-                                   <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                       f.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
-                                   }`}>
-                                       {f.status}
-                                   </span>
-                               </td>
-                               <td className="px-6 py-4">
-                                   <div className="flex items-center gap-2">
-                                       {f.status !== 'approved' && (
-                                           <button onClick={() => handleApproveFatwa(f.id)} className="text-green-600 hover:text-green-700 transition font-bold text-xs border border-green-200 bg-green-50 px-2 py-1 rounded">
-                                               {language === 'ar' ? 'اعتماد' : 'Approve'}
-                                           </button>
-                                       )}
-                                       <button className="text-gray-400 hover:text-blue-500 transition"><Edit className="w-4 h-4" /></button>
-                                   </div>
-                               </td>
-                           </tr>
-                       ))}
-                   </tbody>
-               </table>
-           </div>
       </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-500 flex">
       
-      {/* Sidebar */}
-      <aside className="w-20 md:w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col sticky top-0 h-screen transition-all">
-          <div className="p-4 md:p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-center md:justify-start gap-3">
-              <div className="w-10 h-10 bg-islamic-primary rounded-lg flex items-center justify-center text-white font-bold shadow-md">
-                 A
-              </div>
-              <span className="font-bold text-xl text-gray-800 dark:text-white hidden md:block">Admin</span>
+      <aside className="w-80 bg-white dark:bg-gray-900 border-r dark:border-gray-800 flex flex-col sticky top-0 h-screen transition-all shadow-2xl z-40">
+          <div className="p-8 border-b dark:border-gray-800 mb-8">
+              <Link to="/" className="flex items-center gap-4 group">
+                  <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center shadow-xl p-1">
+                    <img src="https://i.ibb.co/v6yT0D8/hid-logo.png" alt="Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-black text-islamic-primary dark:text-islamic-gold leading-none tracking-tighter">HID ADMIN</h2>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">CMS Control Hub</p>
+                  </div>
+              </Link>
           </div>
           
-          <nav className="flex-1 p-4 space-y-2">
-              {[
-                  { id: 'overview', icon: LayoutDashboard, label: language === 'ar' ? 'نظرة عامة' : 'Overview' },
-                  { id: 'users', icon: Users, label: language === 'ar' ? 'المستخدمين' : 'Users' },
-                  { id: 'courses', icon: BookOpen, label: language === 'ar' ? 'الدورات' : 'Courses' },
-                  { id: 'posts', icon: MessageSquare, label: language === 'ar' ? 'المنشورات' : 'Posts' },
-                  { id: 'content', icon: FileText, label: language === 'ar' ? 'المحتوى' : 'Content' },
-              ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id as any)}
-                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
-                        activeTab === item.id 
-                        ? 'bg-islamic-primary text-white shadow-md' 
-                        : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-                    }`}
-                  >
-                      <item.icon className="w-5 h-5" />
-                      <span className="hidden md:block font-medium">{item.label}</span>
-                  </button>
-              ))}
+          <nav className="flex-1 px-4 space-y-3">
+              <SidebarItem id="overview" icon={LayoutDashboard} label={language === 'ar' ? 'نظرة عامة' : 'Dashboard'} />
+              <SidebarItem id="pages" icon={Layers} label={language === 'ar' ? 'إدارة محتوى الصفحات' : 'Page Editor'} />
+              <SidebarItem id="settings" icon={Settings} label={language === 'ar' ? 'إعدادات الظهور' : 'Visibility Settings'} />
           </nav>
+
+          <div className="p-8 border-t dark:border-gray-800">
+              <div className="bg-gray-50 dark:bg-gray-800 p-5 rounded-[2rem] flex items-center gap-4 mb-6">
+                  <img src={user.avatar} className="w-12 h-12 rounded-xl object-cover border border-white shadow-md" alt="" />
+                  <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-gray-800 dark:text-white truncate">{user.name}</p>
+                      <span className="text-[10px] text-islamic-gold font-bold uppercase tracking-widest">Administrator</span>
+                  </div>
+              </div>
+              <button 
+                onClick={logout}
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-red-50 dark:bg-red-950/30 text-red-600 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-600 hover:text-white transition-all shadow-sm"
+              >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+              </button>
+          </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen">
-          <header className="mb-8 flex justify-between items-center">
+      <main className="flex-1 p-8 md:p-12 overflow-y-auto h-screen bg-gray-50/50 dark:bg-gray-950">
+          <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                    {activeTab === 'overview' ? t('adminWelcome') : 
-                     activeTab === 'users' ? (language === 'ar' ? 'إدارة المستخدمين' : 'User Management') :
-                     activeTab === 'courses' ? (language === 'ar' ? 'إدارة الدورات' : 'Course Management') :
-                     activeTab === 'posts' ? (language === 'ar' ? 'إدارة المنشورات' : 'Post Moderation') :
-                     (language === 'ar' ? 'إدارة المحتوى' : 'Content Management')}
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-1 bg-islamic-gold rounded-full"></div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-islamic-primary">{activeTab}</span>
+                </div>
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white font-serif">
+                    {activeTab === 'overview' ? 'لوحة القيادة والتحليلات' : 
+                     activeTab === 'pages' ? 'مدير الصفحات الذكي' : 
+                     activeTab === 'settings' ? 'إدارة ظهور الموقع' : 'الإعدادات العامة'}
                 </h1>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
-                    {language === 'ar' ? 'لوحة التحكم الكاملة' : 'Full Control Dashboard'}
-                </p>
              </div>
-             <div className="flex items-center gap-3">
-                 <div className="bg-white dark:bg-gray-800 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-300 shadow-sm">
-                     {new Date().toLocaleDateString()}
+             
+             <div className="flex items-center gap-4">
+                 <button className="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-gray-400 hover:text-islamic-primary transition-all relative">
+                    <Bell className="w-5 h-5" />
+                    <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                 </button>
+                 <div className="bg-white dark:bg-gray-800 px-6 py-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-3">
+                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                     <span className="text-xs font-bold text-gray-500">LIVE SYNC ACTIVE</span>
                  </div>
              </div>
           </header>
 
-          {activeTab === 'overview' && renderOverview()}
-          {activeTab === 'users' && renderUsersTable()}
-          {activeTab === 'courses' && renderCoursesTable()}
-          {activeTab === 'posts' && renderPosts()}
-          {activeTab === 'content' && renderContent()}
-
-      </main>
-
-      {/* Simple Modal */}
-      {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6">
-                  <h3 className="text-xl font-bold mb-4 dark:text-white">
-                      {modalType === 'course' ? (language === 'ar' ? 'إضافة دورة جديدة' : 'Add New Course') : ''}
-                      {modalType === 'user' ? (language === 'ar' ? 'إضافة مستخدم' : 'Add User') : ''}
-                  </h3>
-                  <div className="space-y-4">
-                      <input type="text" placeholder="Title / Name" className="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
-                      <input type="text" placeholder="Description / Email" className="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
-                  </div>
-                  <div className="flex gap-3 mt-6">
-                      <button onClick={() => setIsModalOpen(false)} className="flex-1 py-2 border rounded-lg dark:text-gray-300 dark:border-gray-600">Cancel</button>
-                      <button onClick={() => { setIsModalOpen(false); showToast('Saved successfully', 'success'); }} className="flex-1 py-2 bg-islamic-primary text-white rounded-lg">Save</button>
-                  </div>
-              </div>
+          <div className="relative">
+              {activeTab === 'overview' && renderOverview()}
+              {activeTab === 'pages' && renderPageManager()}
+              {activeTab === 'settings' && renderSettings()}
           </div>
-      )}
+      </main>
     </div>
   );
 };

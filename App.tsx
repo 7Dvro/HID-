@@ -18,6 +18,7 @@ import Fatwa from './pages/Fatwa';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import Jobs from './pages/Jobs';
 
 const Layout = () => {
   return (
@@ -51,6 +52,7 @@ const App: React.FC = () => {
                   <Route path="fatwa" element={<Fatwa />} />
                   <Route path="login" element={<Login />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="jobs" element={<Jobs />} />
                 </Route>
                 <Route path="/admin" element={<AdminDashboard />} />
               </Routes>

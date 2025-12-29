@@ -150,7 +150,7 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-20">
       {/* Premium Hero Section */}
-      <div className="bg-islamic-primary text-white py-32 relative overflow-hidden">
+      <div className="bg-islamic-primary text-white py-24 sm:py-32 relative overflow-hidden">
          <div className="absolute inset-0 opacity-20 scale-150 animate-float pointer-events-none">
              <svg width="100%" height="100%">
                  <pattern id="pattern-hex-about" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
@@ -160,74 +160,74 @@ const About: React.FC = () => {
              </svg>
          </div>
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <span className="inline-block bg-white/10 backdrop-blur-md px-6 py-2 rounded-full text-islamic-gold font-bold text-xs uppercase tracking-[0.4em] mb-8 border border-white/20 shadow-2xl animate-fade-in">
+            <span className="inline-block bg-white/10 backdrop-blur-md px-4 sm:px-6 py-2 rounded-full text-islamic-gold font-bold text-[10px] sm:text-xs uppercase tracking-[0.4em] mb-6 sm:mb-8 border border-white/20 shadow-2xl animate-fade-in">
                 HID AUTHORITY • SUDAN
             </span>
-            <h1 className="text-5xl md:text-8xl font-bold font-serif mb-8 drop-shadow-2xl animate-fade-up">{t('about')}</h1>
-            <p className="text-2xl text-islamic-light max-w-3xl mx-auto font-light leading-relaxed animate-fade-up" style={{ animationDelay: '200ms' }}>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold font-serif mb-6 sm:mb-8 drop-shadow-2xl animate-fade-up leading-tight">{t('about')}</h1>
+            <p className="text-lg sm:text-2xl text-islamic-light max-w-3xl mx-auto font-light leading-relaxed animate-fade-up opacity-90 px-4" style={{ animationDelay: '200ms' }}>
                 {t('heroSubtitle')}
             </p>
          </div>
          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-50 dark:from-gray-900 to-transparent"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-20">
          {/* Identity Section */}
-         <div className="glass-card rounded-[4rem] shadow-islamic p-10 md:p-20 mb-24 animate-fade-up border border-white/30 dark:border-white/5 transition-all hover:shadow-2xl">
-             <div className="flex flex-col lg:flex-row gap-20 items-center">
+         <div className="glass-card rounded-[2.5rem] sm:rounded-[4rem] shadow-islamic p-8 sm:p-12 md:p-20 mb-20 sm:mb-24 animate-fade-up border border-white/30 dark:border-white/5 transition-all hover:shadow-2xl">
+             <div className="flex flex-col lg:flex-row gap-12 sm:gap-20 items-center">
                  <div className="lg:w-1/2">
-                     <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-1 bg-islamic-gold rounded-full"></div>
-                        <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-widest text-sm">{language === 'ar' ? 'الهوية والرسالة' : 'Identity & Mission'}</span>
+                     <div className="flex items-center gap-4 mb-6 sm:mb-8">
+                        <div className="w-10 sm:w-12 h-1 bg-islamic-gold rounded-full"></div>
+                        <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-widest text-xs sm:text-sm">{language === 'ar' ? 'الهوية والرسالة' : 'Identity & Mission'}</span>
                      </div>
-                     <h2 className="text-4xl md:text-5xl font-bold text-islamic-dark dark:text-white mb-10 font-serif leading-tight">
+                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-islamic-dark dark:text-white mb-8 sm:mb-10 font-serif leading-[1.3]">
                         {language === 'ar' ? 'العمود الفقري للعمل الدعوي الرسمي' : 'The Backbone of Official Da\'wah'}
                      </h2>
-                     <p className="text-gray-600 dark:text-gray-300 text-xl leading-[2.2] text-justify font-light opacity-90">
+                     <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-[2] sm:leading-[2.2] text-justify font-light opacity-90">
                          {t('aboutText')}
                      </p>
-                     <div className="grid grid-cols-2 gap-8 mt-12">
-                        <div className="p-6 bg-islamic-primary/5 rounded-3xl border border-islamic-primary/10">
-                            <h4 className="font-bold text-islamic-primary text-3xl mb-2 font-serif">2025</h4>
-                            <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{language === 'ar' ? 'عام التأسيس الرقمي' : 'Digital Foundation Year'}</p>
+                     <div className="grid grid-cols-2 gap-4 sm:gap-8 mt-10 sm:mt-12">
+                        <div className="p-5 sm:p-6 bg-islamic-primary/5 rounded-2xl sm:rounded-3xl border border-islamic-primary/10">
+                            <h4 className="font-bold text-islamic-primary text-2xl sm:text-3xl mb-1 sm:mb-2 font-serif">2025</h4>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{language === 'ar' ? 'عام التأسيس الرقمي' : 'Digital Foundation Year'}</p>
                         </div>
-                        <div className="p-6 bg-islamic-gold/5 rounded-3xl border border-islamic-gold/10">
-                            <h4 className="font-bold text-islamic-gold text-3xl mb-2 font-serif">18+</h4>
-                            <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{language === 'ar' ? 'ولاية نخدمها' : 'States We Serve'}</p>
+                        <div className="p-5 sm:p-6 bg-islamic-gold/5 rounded-2xl sm:rounded-3xl border border-islamic-gold/10">
+                            <h4 className="font-bold text-islamic-gold text-2xl sm:text-3xl mb-1 sm:mb-2 font-serif">18+</h4>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{language === 'ar' ? 'ولاية نخدمها' : 'States We Serve'}</p>
                         </div>
                      </div>
                  </div>
-                 <div className="lg:w-1/2 relative group">
-                     <div className="absolute inset-0 bg-islamic-primary/20 rounded-[3rem] transform -rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
-                     <div className="absolute inset-0 bg-islamic-gold/20 rounded-[3rem] transform rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
-                     <img src="https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Islamic Heritage" className="relative rounded-[3rem] shadow-2xl w-full object-cover border-8 border-white dark:border-gray-800 h-[600px] grayscale-[0.2] hover:grayscale-0 transition duration-1000" />
-                     <div className="absolute bottom-8 right-8 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-white/20 animate-float max-w-[200px]">
-                        <Quote className="w-8 h-8 text-islamic-gold mb-2 opacity-50" />
-                        <p className="text-xs font-bold text-islamic-dark italic">{language === 'ar' ? 'نحو مجتمع سوداني متسامح ومستنير' : 'Towards a tolerant and enlightened Sudanese society'}</p>
+                 <div className="lg:w-1/2 relative group w-full">
+                     <div className="absolute inset-0 bg-islamic-primary/20 rounded-[2rem] sm:rounded-[3rem] transform -rotate-2 sm:-rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
+                     <div className="absolute inset-0 bg-islamic-gold/20 rounded-[2rem] sm:rounded-[3rem] transform rotate-2 sm:rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
+                     <img src="https://images.unsplash.com/photo-1596464528464-9be972eb049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Islamic Heritage" className="relative rounded-[2rem] sm:rounded-[3rem] shadow-2xl w-full object-cover border-4 sm:border-8 border-white dark:border-gray-800 h-[400px] sm:h-[600px] grayscale-[0.2] hover:grayscale-0 transition duration-1000" />
+                     <div className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 bg-white/90 backdrop-blur-md p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 animate-float max-w-[160px] sm:max-w-[200px]">
+                        <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-islamic-gold mb-2 opacity-50" />
+                        <p className="text-[10px] sm:text-xs font-bold text-islamic-dark italic leading-relaxed">{language === 'ar' ? 'نحو مجتمع سوداني متسامح ومستنير' : 'Towards a tolerant and enlightened Sudanese society'}</p>
                      </div>
                  </div>
              </div>
          </div>
 
          {/* Vision & Mission Grid */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
-             <div className="bg-white dark:bg-gray-800 rounded-[3.5rem] shadow-xl p-12 border-b-[12px] border-islamic-primary hover:-translate-y-2 transition-all duration-500 group">
-                 <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mb-8 text-blue-600 shadow-inner group-hover:scale-110 transition-transform">
-                     <Eye className="w-10 h-10" />
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 mb-20 sm:mb-24">
+             <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] sm:rounded-[3.5rem] shadow-xl p-8 sm:p-12 border-b-[10px] sm:border-b-[12px] border-islamic-primary hover:-translate-y-2 transition-all duration-500 group">
+                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 dark:bg-blue-900/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-6 sm:mb-8 text-blue-600 shadow-inner group-hover:scale-110 transition-transform">
+                     <Eye className="w-8 h-8 sm:w-10 sm:h-10" />
                  </div>
-                 <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-8 font-serif">{t('vision')}</h3>
-                 <p className="text-gray-600 dark:text-gray-300 text-xl leading-relaxed font-light">
+                 <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8 font-serif leading-tight">{t('vision')}</h3>
+                 <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-relaxed font-light opacity-90">
                      {language === 'ar' 
                       ? 'هيئة رائدة تمكن الأئمة والحفظة والدعاة لبناء مجتمع سوداني متسامح، مستنير، ومتمسك بقيمه الدينية الأصيلة.'
                       : 'A pioneering authority empowering Imams, Huffaz, and Da\'is to build a tolerant, enlightened Sudanese society.'}
                  </p>
              </div>
-             <div className="bg-white dark:bg-gray-800 rounded-[3.5rem] shadow-xl p-12 border-b-[12px] border-islamic-gold hover:-translate-y-2 transition-all duration-500 group">
-                 <div className="w-20 h-20 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center mb-8 text-orange-600 shadow-inner group-hover:scale-110 transition-transform">
-                     <Target className="w-10 h-10" />
+             <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] sm:rounded-[3.5rem] shadow-xl p-8 sm:p-12 border-b-[10px] sm:border-b-[12px] border-islamic-gold hover:-translate-y-2 transition-all duration-500 group">
+                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-50 dark:bg-orange-900/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-6 sm:mb-8 text-orange-600 shadow-inner group-hover:scale-110 transition-transform">
+                     <Target className="w-8 h-8 sm:w-10 sm:h-10" />
                  </div>
-                 <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-8 font-serif">{t('mission')}</h3>
-                 <p className="text-gray-600 dark:text-gray-300 text-xl leading-relaxed font-light">
+                 <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8 font-serif leading-tight">{t('mission')}</h3>
+                 <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-relaxed font-light opacity-90">
                      {language === 'ar'
                       ? 'الإشراف على تأهيل وتطوير وتنظيم شؤون الأئمة والحفظة والدعاة في السودان، ونشر الفهم الوسطي المستنير للإسلام.'
                       : 'Supervising the qualification, development, and organization of affairs for Imams, Huffaz, and Da\'is.'}
@@ -235,47 +235,47 @@ const About: React.FC = () => {
              </div>
          </div>
 
-         {/* Values - High Impact Layout */}
-         <div className="mb-32">
-             <div className="text-center mb-20">
-                <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{language === 'ar' ? 'مبادئنا الثابتة' : 'Our Principles'}</span>
-                <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white font-serif">{t('values')}</h2>
+         {/* Values */}
+         <div className="mb-24 sm:mb-32">
+             <div className="text-center mb-16 sm:mb-20">
+                <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-[0.4em] text-[10px] sm:text-xs mb-3 sm:mb-4 block">{language === 'ar' ? 'مبادئنا الثابتة' : 'Our Principles'}</span>
+                <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white font-serif leading-tight">{t('values')}</h2>
              </div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
                  {values.map((val, idx) => (
-                     <div key={idx} className="group bg-white dark:bg-gray-800 p-12 rounded-[3rem] shadow-lg hover:shadow-2xl transition-all duration-500 text-center border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-                         <div className="absolute top-0 right-0 w-32 h-32 bg-islamic-primary/5 rounded-bl-[100%] transition-all group-hover:w-40 group-hover:h-40"></div>
-                         <div className="w-20 h-20 mx-auto bg-gray-50 dark:bg-gray-700 rounded-3xl flex items-center justify-center mb-8 text-islamic-primary dark:text-islamic-gold group-hover:rotate-12 transition-transform shadow-sm relative z-10">
-                             <val.icon className="w-10 h-10" />
+                     <div key={idx} className="group bg-white dark:bg-gray-800 p-8 sm:p-12 rounded-[2rem] sm:rounded-[3rem] shadow-lg hover:shadow-2xl transition-all duration-500 text-center border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                         <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-islamic-primary/5 rounded-bl-[100%] transition-all group-hover:w-32 group-hover:h-32 sm:group-hover:w-40 sm:group-hover:h-40"></div>
+                         <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gray-50 dark:bg-gray-700 rounded-2xl sm:rounded-3xl flex items-center justify-center mb-6 sm:mb-8 text-islamic-primary dark:text-islamic-gold group-hover:rotate-12 transition-transform shadow-sm relative z-10">
+                             <val.icon className="w-8 h-8 sm:w-10 sm:h-10" />
                          </div>
-                         <h4 className="font-bold text-2xl mb-6 text-gray-900 dark:text-white font-serif relative z-10">{language === 'ar' ? val.titleAr : val.titleEn}</h4>
-                         <p className="text-md text-gray-500 dark:text-gray-400 leading-loose font-light relative z-10">{language === 'ar' ? val.descAr : val.descEn}</p>
+                         <h4 className="font-bold text-xl sm:text-2xl mb-4 sm:mb-6 text-gray-900 dark:text-white font-serif relative z-10 leading-tight">{language === 'ar' ? val.titleAr : val.titleEn}</h4>
+                         <p className="text-sm sm:text-md text-gray-500 dark:text-gray-400 leading-relaxed sm:leading-loose font-light relative z-10">{language === 'ar' ? val.descAr : val.descEn}</p>
                      </div>
                  ))}
              </div>
          </div>
 
-         {/* Executive Office - Interactive Section */}
-         <div className="bg-islamic-dark rounded-[4rem] p-12 md:p-24 text-white relative overflow-hidden mb-32 shadow-5xl">
+         {/* Executive Office */}
+         <div className="bg-islamic-dark rounded-[2.5rem] sm:rounded-[4rem] p-8 sm:p-12 md:p-24 text-white relative overflow-hidden mb-24 sm:mb-32 shadow-5xl">
              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-10 scale-150"></div>
-             <div className="relative z-10 text-center mb-20">
-                <span className="text-islamic-gold font-bold uppercase tracking-[0.3em] text-xs mb-4 block">{language === 'ar' ? 'القيادة الإدارية' : 'Administrative Leadership'}</span>
-                <h2 className="text-4xl md:text-6xl font-bold font-serif mb-4">{language === 'ar' ? 'المكتب التنفيذي' : 'Executive Office'}</h2>
-                <p className="text-islamic-light/60 max-w-xl mx-auto text-sm">{language === 'ar' ? 'انقر على أي أمانة لاستكشاف مهامها وأعضائها' : 'Click on any secretariat to explore its tasks and members'}</p>
+             <div className="relative z-10 text-center mb-12 sm:mb-20">
+                <span className="text-islamic-gold font-bold uppercase tracking-[0.3em] text-[10px] sm:text-xs mb-3 sm:mb-4 block">{language === 'ar' ? 'القيادة الإدارية' : 'Administrative Leadership'}</span>
+                <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold font-serif mb-4 leading-tight">{language === 'ar' ? 'المكتب التنفيذي' : 'Executive Office'}</h2>
+                <p className="text-islamic-light/60 max-w-xl mx-auto text-xs sm:text-sm">{language === 'ar' ? 'انقر على أي أمانة لاستكشاف مهامها وأعضائها' : 'Click on any secretariat to explore its tasks and members'}</p>
              </div>
              
-             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 relative z-10">
+             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 relative z-10">
                  {executiveOffice.map((member) => (
                      <button 
                         key={member.id} 
                         onClick={() => setSelectedSecretariat(member)}
-                        className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 text-center hover:bg-white/20 transition-all group active:scale-95 shadow-xl flex flex-col items-center justify-center min-h-[220px]"
+                        className="bg-white/5 backdrop-blur-xl p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/10 text-center hover:bg-white/20 transition-all group active:scale-95 shadow-xl flex flex-col items-center justify-center min-h-[160px] sm:min-h-[220px]"
                     >
-                         <div className="w-16 h-16 bg-islamic-gold/20 rounded-2xl flex items-center justify-center mb-6 text-islamic-gold group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-islamic-gold/30">
-                             <member.icon className="w-8 h-8" />
+                         <div className="w-12 h-12 sm:w-16 h-16 bg-islamic-gold/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 text-islamic-gold group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-islamic-gold/30">
+                             <member.icon className="w-6 h-6 sm:w-8 sm:h-8" />
                          </div>
-                         <p className="text-lg font-bold tracking-tight mb-2 leading-tight">{language === 'ar' ? member.roleAr : member.roleEn}</p>
-                         <div className="text-[10px] text-islamic-gold font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                         <p className="text-sm sm:text-lg font-bold tracking-tight mb-2 leading-snug">{language === 'ar' ? member.roleAr : member.roleEn}</p>
+                         <div className="text-[8px] sm:text-[10px] text-islamic-gold font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                             {language === 'ar' ? 'عرض التفاصيل' : 'View Details'}
                          </div>
                      </button>
@@ -283,22 +283,22 @@ const About: React.FC = () => {
              </div>
          </div>
 
-         {/* Strategic Axes - Refined List */}
-         <div className="bg-white dark:bg-gray-800 rounded-[4rem] p-12 md:p-24 shadow-islamic border border-gray-100 dark:border-gray-700 overflow-hidden relative">
-             <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none"><Layers className="w-64 h-64 text-islamic-primary" /></div>
-             <div className="text-center mb-20 relative z-10">
-                <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{language === 'ar' ? 'خارطة الطريق' : 'Roadmap'}</span>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 font-serif">{language === 'ar' ? 'المحاور الاستراتيجية (2026-2030)' : 'Strategic Axes (2026-2030)'}</h2>
+         {/* Strategic Axes */}
+         <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] sm:rounded-[4rem] p-8 sm:p-12 md:p-24 shadow-islamic border border-gray-100 dark:border-gray-700 overflow-hidden relative">
+             <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none"><Layers className="w-48 sm:w-64 h-48 sm:h-64 text-islamic-primary" /></div>
+             <div className="text-center mb-16 sm:mb-20 relative z-10">
+                <span className="text-islamic-primary dark:text-islamic-gold font-bold uppercase tracking-[0.4em] text-[10px] sm:text-xs mb-3 sm:mb-4 block">{language === 'ar' ? 'خارطة الطريق' : 'Roadmap'}</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 font-serif leading-tight">{language === 'ar' ? 'المحاور الاستراتيجية (2026-2030)' : 'Strategic Axes (2026-2030)'}</h2>
              </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto relative z-10">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 max-w-6xl mx-auto relative z-10">
                  {axes.map((axis, idx) => (
-                     <div key={idx} className="flex items-start gap-8 bg-gray-50 dark:bg-gray-900/40 p-12 rounded-[3.5rem] border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-500 group">
-                         <div className="mt-1 min-w-[48px] h-12 w-12 bg-white dark:bg-gray-700 rounded-2xl flex items-center justify-center text-green-500 shadow-sm group-hover:bg-islamic-primary group-hover:text-white transition-all">
-                             <CheckCircle className="w-6 h-6" />
+                     <div key={idx} className="flex items-start gap-6 sm:gap-8 bg-gray-50 dark:bg-gray-900/40 p-8 sm:p-12 rounded-[2rem] sm:rounded-[3.5rem] border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-500 group">
+                         <div className="mt-1 min-w-[40px] h-10 sm:min-w-[48px] sm:h-12 w-10 sm:w-12 bg-white dark:bg-gray-700 rounded-xl sm:rounded-2xl flex items-center justify-center text-green-500 shadow-sm group-hover:bg-islamic-primary group-hover:text-white transition-all">
+                             <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                          </div>
                          <div>
-                             <h4 className="font-bold text-2xl text-gray-900 dark:text-white mb-4 font-serif leading-tight">{language === 'ar' ? axis.titleAr : axis.titleEn}</h4>
-                             <p className="text-gray-500 dark:text-gray-400 text-lg leading-relaxed font-light">{language === 'ar' ? axis.descAr : axis.descEn}</p>
+                             <h4 className="font-bold text-xl sm:text-2xl text-gray-900 dark:text-white mb-3 sm:mb-4 font-serif leading-tight">{language === 'ar' ? axis.titleAr : axis.titleEn}</h4>
+                             <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg leading-relaxed font-light opacity-90">{language === 'ar' ? axis.descAr : axis.descEn}</p>
                          </div>
                      </div>
                  ))}
@@ -306,13 +306,11 @@ const About: React.FC = () => {
          </div>
       </div>
 
-      {/* Secretariat Modal - Professional Overlay - Fixed Responsiveness */}
+      {/* Secretariat Modal */}
       {selectedSecretariat && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-islamic-dark/80 backdrop-blur-xl animate-in fade-in duration-300">
-              {/* Modal Container */}
               <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] md:rounded-[4rem] shadow-5xl w-full max-w-4xl overflow-hidden flex flex-col relative border border-white/20 dark:border-gray-800 h-full max-h-[90vh] sm:h-auto">
                   
-                  {/* Close Button - More accessible and visible */}
                   <button 
                     onClick={() => setSelectedSecretariat(null)} 
                     className="absolute top-4 end-4 sm:top-8 sm:end-8 w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 dark:bg-gray-800 hover:bg-red-500 hover:text-white text-gray-400 rounded-full flex items-center justify-center transition-all z-50 shadow-lg border border-gray-200 dark:border-gray-700"
@@ -321,15 +319,14 @@ const About: React.FC = () => {
                     <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
 
-                  {/* Modal Header */}
                   <div className="bg-islamic-primary p-8 sm:p-12 md:p-16 text-white relative flex-shrink-0">
                       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-10 pointer-events-none"></div>
                       <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white/10 backdrop-blur-md rounded-2xl sm:rounded-3xl flex items-center justify-center flex-shrink-0 border border-white/20 shadow-2xl">
-                             <selectedSecretariat.icon className="w-10 h-10 sm:w-12 sm:h-12 text-islamic-gold" />
+                          <div className="w-16 h-16 sm:w-24 sm:h-24 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-3xl flex items-center justify-center flex-shrink-0 border border-white/20 shadow-2xl">
+                             <selectedSecretariat.icon className="w-8 h-8 sm:w-12 sm:h-12 text-islamic-gold" />
                           </div>
                           <div className="text-center sm:text-start">
-                             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif mb-2">{language === 'ar' ? selectedSecretariat.roleAr : selectedSecretariat.roleEn}</h2>
+                             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif mb-2 leading-tight">{language === 'ar' ? selectedSecretariat.roleAr : selectedSecretariat.roleEn}</h2>
                              <div className="flex items-center justify-center sm:justify-start gap-2 text-islamic-gold font-bold text-xs sm:text-sm uppercase tracking-widest">
                                 <UserCircle className="w-4 h-4" />
                                 {language === 'ar' ? selectedSecretariat.secretaryAr : selectedSecretariat.secretaryEn}
@@ -338,54 +335,50 @@ const About: React.FC = () => {
                       </div>
                   </div>
 
-                  {/* Modal Content - Scrollable area */}
-                  <div className="p-6 sm:p-10 md:p-16 flex-1 overflow-y-auto custom-scrollbar bg-white dark:bg-gray-900">
-                      {/* Stats Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 mb-10 md:mb-12">
-                          <div className="bg-gray-50 dark:bg-gray-800 p-5 sm:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col justify-center items-center sm:items-start">
+                  <div className="p-8 sm:p-10 md:p-16 flex-1 overflow-y-auto custom-scrollbar bg-white dark:bg-gray-900">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-10 md:mb-12">
+                          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col justify-center items-center sm:items-start text-center sm:text-start">
                              <div className="flex items-center gap-3 text-islamic-primary mb-3">
                                 <Users className="w-5 h-5 text-islamic-gold" />
                                 <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{language === 'ar' ? 'عدد الأعضاء' : 'Members'}</span>
                              </div>
-                             <span className="text-3xl font-bold text-gray-900 dark:text-white font-serif">{selectedSecretariat.members}</span>
+                             <span className="text-3xl font-bold text-gray-900 dark:text-white font-serif leading-none">{selectedSecretariat.members}</span>
                           </div>
-                          <div className="bg-gray-50 dark:bg-gray-800 p-5 sm:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700 sm:col-span-2 shadow-sm flex flex-col justify-center items-center sm:items-start">
+                          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700 sm:col-span-2 shadow-sm flex flex-col justify-center items-center sm:items-start text-center sm:text-start">
                              <div className="flex items-center gap-3 text-islamic-primary mb-3">
                                 <Shield className="w-5 h-5 text-islamic-gold" />
                                 <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{language === 'ar' ? 'الحالة الإدارية' : 'Status'}</span>
                              </div>
-                             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white font-serif">{language === 'ar' ? 'أمانة تنفيذية معتمدة' : 'Verified Executive Secretariat'}</span>
+                             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white font-serif leading-snug">{language === 'ar' ? 'أمانة تنفيذية معتمدة' : 'Verified Executive Secretariat'}</span>
                           </div>
                       </div>
 
-                      {/* Detailed Purpose & Info */}
-                      <div className="space-y-8 md:space-y-12">
+                      <div className="space-y-10 md:space-y-12">
                           <section>
-                              <h4 className="flex items-center gap-3 font-bold text-islamic-dark dark:text-islamic-gold text-base sm:text-lg mb-4 border-b dark:border-gray-800 pb-2">
+                              <h4 className="flex items-center gap-3 font-bold text-islamic-dark dark:text-islamic-gold text-lg sm:text-xl mb-4 border-b dark:border-gray-800 pb-2 leading-tight">
                                 <Target className="w-5 h-5" />
                                 {language === 'ar' ? 'الغرض من الأمانة' : 'Purpose of Secretariat'}
                               </h4>
-                              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed font-light text-justify">
+                              <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-relaxed font-light text-justify opacity-90">
                                  {language === 'ar' ? selectedSecretariat.purposeAr : selectedSecretariat.purposeEn}
                               </p>
                           </section>
 
                           <section>
-                              <h4 className="flex items-center gap-3 font-bold text-islamic-dark dark:text-islamic-gold text-base sm:text-lg mb-4 border-b dark:border-gray-800 pb-2">
+                              <h4 className="flex items-center gap-3 font-bold text-islamic-dark dark:text-islamic-gold text-lg sm:text-xl mb-4 border-b dark:border-gray-800 pb-2 leading-tight">
                                 <Info className="w-5 h-5" />
                                 {language === 'ar' ? 'معلومات إضافية' : 'General Information'}
                               </h4>
-                              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed font-light text-justify">
+                              <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-relaxed font-light text-justify opacity-90">
                                  {language === 'ar' ? selectedSecretariat.infoAr : selectedSecretariat.infoEn}
                               </p>
                           </section>
                       </div>
 
-                      {/* Footer CTA */}
-                      <div className="mt-12 md:mt-16 flex justify-center pb-4 sm:pb-0">
+                      <div className="mt-12 md:mt-16 flex justify-center">
                          <button 
                             onClick={() => setSelectedSecretariat(null)} 
-                            className="bg-islamic-primary text-white w-full sm:w-auto px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-xl shadow-islamic-primary/20 hover:bg-islamic-dark transition-all transform hover:scale-[1.02] active:scale-95"
+                            className="bg-islamic-primary text-white w-full sm:w-auto px-12 py-4 sm:py-5 rounded-2xl font-black uppercase tracking-widest text-xs sm:text-sm shadow-xl shadow-islamic-primary/20 hover:bg-islamic-dark transition-all transform hover:scale-[1.02] active:scale-95"
                         >
                             {language === 'ar' ? 'إغلاق النافذة' : 'Close Details'}
                          </button>
